@@ -6,9 +6,7 @@
 
 Chinese Historic Building Information Modeling — a BIM organization method based on traditional Chinese construction practice. Prototype V1 is an open-source feasibility study aimed at researchers, heritage-architecture enthusiasts, and creators who need to produce traditional-architecture models quickly: [OpenSCAD](https://openscad.org) serves as a scriptable, versionable, reproducible geometry core; axis lines (*seams*) and members are described as JSON data; a Python glue layer converts them into OpenSCAD instance code and automatically exports models and three-view drawings reusable in Blender / Adobe Illustrator / AutoCAD.
 
-> **Current scope**: the *yanzhu* (eave column) only; the Web workbench supports
-> real-time adjustment of the modular diameter D. See [PROGRESS.md](PROGRESS.md)
-> and [docs/DECISIONS.md](docs/DECISIONS.md) for what V1 does and does not cover.
+> **Current scope**: the *yanzhu* (eave column) only; the Web workbench supports real-time adjustment of the modular diameter D. See [PROGRESS.md](PROGRESS.md) and [docs/DECISIONS.md](docs/DECISIONS.md) for what V1 does and does not cover.
 
 ## Example Output (D=300, snapshot of v0.3.0 semantics)
 
@@ -66,8 +64,7 @@ make test           # run smoke tests
 
 ## Coding System
 
-V1 seam codes follow the "seam-based coding system" (details in
-[docs/coding-system.md](docs/coding-system.md), Chinese only for now):
+V1 seam codes follow the "seam-based coding system" (details in [docs/coding-system.md](docs/coding-system.md), Chinese only for now):
 
 - Orientation: `F` front / `B` back / `L` left / `R` right
 - Inner/outer: `i` inner / `o` outer
@@ -88,28 +85,14 @@ Example: `yanzhu[CAO_Fo, JIAN_L1]` = an eave column at the intersection of the f
 
 ## Acknowledgments
 
-This project is developed in a human–AI collaboration: the author is responsible
-for the architecture, traditional construction terminology, and all academic
-decisions of the coding system; [WorkBuddy](https://www.workbuddy.cn),
-[Trae](https://www.trae.ai), and the GLM family of large models (GLM-5.3 and
-GLM-5.3-Flash during development, as of 2026-09) assisted with code scaffolding,
-documentation drafts, and engineering implementation.
+This project is developed in a human–AI collaboration: the author is responsible for the architecture, traditional construction terminology, and all academic decisions of the coding system; [WorkBuddy](https://www.workbuddy.cn), [Trae](https://www.trae.ai), and the GLM family of large models (GLM-5.3 and GLM-5.3-Flash during development, as of 2026-09) assisted with code scaffolding, documentation drafts, and engineering implementation.
 
-- Scope of AI involvement: code implementation assistance, documentation drafting,
-  test scaffolding; all architectural decisions and academic content (the seam
-  coding system, etc.) were reviewed and are owned by the author.
-- AI usage in the academic paper will be disclosed separately per the target
-  journal's policy.
+- Scope of AI involvement: code implementation assistance, documentation drafting, test scaffolding; all architectural decisions and academic content (the seam coding system, etc.) were reviewed and are owned by the author.
+- AI usage in the academic paper will be disclosed separately per the target journal's policy.
 
 ## License
 
 - **Code**: MIT License — see [LICENSE](LICENSE).
-- **Documentation & coding system**: all rights reserved for now (an academic
-  paper is in preparation) — see [LICENSE-docs.md](LICENSE-docs.md); it will be
-  relicensed under CC BY 4.0 once the paper is published.
+- **Documentation & coding system**: all rights reserved for now (an academic paper is in preparation) — see [LICENSE-docs.md](LICENSE-docs.md); it will be relicensed under CC BY 4.0 once the paper is published.
 
-> OpenSCAD is invoked as a subprocess only; the repository does not link any of
-> its libraries and is therefore not affected by its GPL licensing. Researchers
-> may cite, adapt, and redistribute the code without restrictions; for reuse of
-> the coding system described in the docs, please contact the author first
-> (academic citation and discussion are always welcome).
+> OpenSCAD is invoked as a subprocess only; the repository does not link any of its libraries and is therefore not affected by its GPL licensing. Researchers may cite, adapt, and redistribute the code without restrictions; for reuse of the coding system described in the docs, please contact the author first (academic citation and discussion are always welcome).

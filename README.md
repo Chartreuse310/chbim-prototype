@@ -6,9 +6,7 @@
 
 Chinese Historic Building Information Modeling——基于中国古代营造体系的 BIM 组织方法 Prototype V1 是一个面向研究者、古建筑爱好者和需要快速制作古建筑模型的创作者的开源可行性验证原型。目标是用 [OpenSCAD](https://openscad.org) 作为脚本化、可版本化、可复现的几何核心，把轴线（缝）与构件用 JSON 数据描述，由 Python 粘合层把它们转成 OpenSCAD 实例代码，并自动导出可在 Blender / Adobe Illustrator / AutoCAD 复用的模型与三视图图纸。
 
-> **当前能力**：仅 yanzhu（檐柱），Web 工作台支持 D 模数即时调整。
-> 见 [PROGRESS.md](PROGRESS.md) 与 [docs/DECISIONS.md](docs/DECISIONS.md)
-> 了解 V1 已实现与未实现项。
+> **当前能力**：仅 yanzhu（檐柱），Web 工作台支持 D 模数即时调整。见 [PROGRESS.md](PROGRESS.md) 与 [docs/DECISIONS.md](docs/DECISIONS.md) 了解 V1 已实现与未实现项。
 
 ## 示例输出（D=300，快照于 v0.3.0 语义）
 
@@ -90,16 +88,12 @@ V1 缝编码遵循“基于缝的编码体系”（详见 [docs/coding-system.md
 
 本项目为「人机协作」开发：作者负责架构设计、营造术语与编码体系的全部学术决策；[WorkBuddy](https://www.workbuddy.cn) 、[Trae](https://www.trae.ai) 及 GLM 系列大模型（开发期间使用 GLM-5.3 与 GLM-5.3-Flash，截至 2026-09）承担了代码脚手架、文档初稿与工程实现辅助。
 
-- AI 参与范围：代码实现辅助、文档起草、测试搭建；所有架构决策与
-  学术内容（缝编码体系等）均由作者审定并对内容负责。
+- AI 参与范围：代码实现辅助、文档起草、测试搭建；所有架构决策与 学术内容（缝编码体系等）均由作者审定并对内容负责。
 - 学术论文中的 AI 使用声明将按目标期刊政策另行披露。
 
 ## 协议
 
 - **代码**：MIT License —— 见 [LICENSE](LICENSE)。
-- **文档与编码体系**：暂保留所有权利（学术论文准备中），见
-  [LICENSE-docs.md](LICENSE-docs.md)；论文见刊后将变更为 CC BY 4.0。
+- **文档与编码体系**：暂保留所有权利（学术论文准备中），见 [LICENSE-docs.md](LICENSE-docs.md)；论文见刊后将变更为 CC BY 4.0。
 
-> 仅以进程级调用 OpenSCAD 可执行文件，仓库代码不链接其任何库，
-> 因此不受 OpenSCAD GPL 传染。研究者引用、改写、再发布代码均无负担；
-> 引用文档中的编码体系请先联系作者（学术引用与讨论不受限）。
+> 仅以进程级调用 OpenSCAD 可执行文件，仓库代码不链接其任何库，因此不受 OpenSCAD GPL 传染。研究者引用、改写、再发布代码均无负担；引用文档中的编码体系请先联系作者（学术引用与讨论不受限）。

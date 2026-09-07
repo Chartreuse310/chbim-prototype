@@ -1,8 +1,6 @@
 # 当前生效决策索引
 
-本项目采用 ADR（Architecture Decision Record）记录架构决策。本文件为
-活文档，对所有生效决策给出索引与一句话概要；详细推理见各 ADR 文件。
-推翻旧决策 = 写新 ADR 标记 supersede，旧 ADR 不删，保留推理链。
+本项目采用 ADR（Architecture Decision Record）记录架构决策。本文件为 活文档，对所有生效决策给出索引与一句话概要；详细推理见各 ADR 文件。推翻旧决策 = 写新 ADR 标记 supersede，旧 ADR 不删，保留推理链。
 
 | 编号 | 标题 | 状态 | 一句话 |
 |---|---|---|---|

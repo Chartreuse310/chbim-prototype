@@ -1,6 +1,5 @@
 ---
-status: accepted
-date: 2026-09-07
+status: accepted date: 2026-09-07
 ---
 
 # ADR-0005 · 开源协议选 MIT
@@ -11,13 +10,11 @@ date: 2026-09-07
 - 让研究者最自由地引用、改写、集成
 - 不引入协议传染风险
 
-OpenSCAD 自身是 GPL-2+。但本项目仅在进程级调用其可执行文件，**不
-链接任何 OpenSCAD 代码或库**，因此本项目代码不受 OpenSCAD GPL 传染。
+OpenSCAD 自身是 GPL-2+。但本项目仅在进程级调用其可执行文件，**不 链接任何 OpenSCAD 代码或库**，因此本项目代码不受 OpenSCAD GPL 传染。
 
 ## 决策
 
-代码采用 **MIT License**。文档（`docs/`、`README.md` 等）可补充
-**CC BY 4.0**（后续可在 LICENSE 旁加 LICENSE-docs 文件）。
+代码采用 **MIT License**。文档（`docs/`、`README.md` 等）可补充**CC BY 4.0**（后续可在 LICENSE 旁加 LICENSE-docs 文件）。
 
 ## 后果
 
