@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Added
+- README 双语化：新增英文版 `README.en.md`，中英版互链
+
 ## [0.2.0] - 2026-09-07
 
 ### Added

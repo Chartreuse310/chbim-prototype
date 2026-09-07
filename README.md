@@ -1,5 +1,7 @@
 # CHBIM Prototype V1
 
+简体中文 | [English](README.en.md)
+
 **以 OpenSCAD 为几何核心的中国古建参数化建模原型**
 
 Chinese Historic Building Information Modeling——基于中国古代营造体系的 BIM 组织方法 Prototype V1 是一个面向研究者的开源可行性验证原型。目标是用 [OpenSCAD](https://openscad.org) 作为脚本化、可版本化、可复现的几何核心，把轴线（缝）与构件用 JSON 数据描述，由 Python 粘合层把它们转成 OpenSCAD 实例代码，并自动导出可在 Blender / Adobe Illustrator / AutoCAD 复用的模型与三视图图纸。
