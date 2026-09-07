@@ -10,6 +10,19 @@ Chinese Historic Building Information Modeling — a BIM organization method bas
 > real-time adjustment of the modular diameter D. See [PROGRESS.md](PROGRESS.md)
 > and [docs/DECISIONS.md](docs/DECISIONS.md) for what V1 does and does not cover.
 
+## Example Output (D=300, snapshot of v0.3.0 semantics)
+
+<p>
+  <img src="docs/images/sheet-sample.svg" width="620" alt="Three-view drawing sample (SVG)">
+</p>
+<p>
+  <img src="docs/images/preview-sample.png" width="300" alt="3D preview sample (PNG)">
+</p>
+
+- Left: the three-view drawing produced by `make build D=300` (A4, GB/T 50001-2017 frame & title block)
+- Right: off-screen render of the same model (STL) used by the three.js preview
+- Snapshots are refreshed manually via `make snapshot`; `build/` itself is not committed
+
 ---
 
 ## Why OpenSCAD

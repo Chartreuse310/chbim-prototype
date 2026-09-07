@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added
+- README 示例输出：`docs/images/` 收录三视图 SVG 与 3D 预览 PNG 快照
+  （`build/` 仍整体忽略，快照经 `make snapshot` 手动刷新）
+
 ## [0.3.0] - 2026-09-07
 
 ### Added

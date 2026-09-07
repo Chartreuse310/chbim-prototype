@@ -10,6 +10,19 @@ Chinese Historic Building Information Modeling——基于中国古代营造体�
 > 见 [PROGRESS.md](PROGRESS.md) 与 [docs/DECISIONS.md](docs/DECISIONS.md)
 > 了解 V1 已实现与未实现项。
 
+## 示例输出（D=300，快照于 v0.3.0 语义）
+
+<p>
+  <img src="docs/images/sheet-sample.svg" width="620" alt="三视图图纸示例（SVG）">
+</p>
+<p>
+  <img src="docs/images/preview-sample.png" width="300" alt="3D 预览示例（PNG）">
+</p>
+
+- 左：`make build D=300` 生成的三视图图纸（A4，GB/T 50001-2017 图框/标题栏）
+- 右：three.js 预览所用的同一模型（STL）的离屏渲染
+- 快照由 `make snapshot` 手动刷新；`build/` 本身不入库
+
 ---
 
 ## 为什么选 OpenSCAD
