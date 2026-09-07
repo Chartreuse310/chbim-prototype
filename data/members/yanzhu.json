@@ -1,0 +1,17 @@
+{
+  "type": "yanzhu",
+  "name": "檐柱",
+  "category": "柱",
+  "params": {
+    "height": "11D",
+    "diameter": "1D"
+  },
+  "instances": [
+    { "id": "YZ-01", "axes": ["CAO_Fo", "JIAN_L1"] },
+    { "id": "YZ-02", "axes": ["CAO_Fo", "JIAN_C"] },
+    { "id": "YZ-03", "axes": ["CAO_Fo", "JIAN_R1"] },
+    { "id": "YZ-04", "axes": ["CAO_Ro", "JIAN_L1"] },
+    { "id": "YZ-05", "axes": ["CAO_Ro", "JIAN_C"] },
+    { "id": "YZ-06", "axes": ["CAO_Ro", "JIAN_R1"] }
+  ]
+}

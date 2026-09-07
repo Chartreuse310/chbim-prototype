@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CHBIM 轴线（缝）定义",
+  "type": "object",
+  "required": ["module", "axes"],
+  "properties": {
+    "module": {
+      "type": "object",
+      "required": ["D_mm"],
+      "properties": {
+        "D_mm": { "type": "number", "minimum": 1, "description": "整体模数 D=柱径（mm）" },
+        "note": { "type": "string" }
+      }
+    },
+    "axes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "distance"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^(CAO|JIAN|FU|TUAN|TUANJIAN|PUZUO|TIAO)_[FBLR]?[0-9]*[io]?$",
+            "description": "缝编码，规则见 docs/coding-system.md"
+          },
+          "kind": { "enum": ["CAO", "JIAN", "FU", "TUAN", "TUANJIAN", "PUZUO", "TIAO"] },
+          "distance": {
+            "oneOf": [
+              { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?D$" },
+              { "type": "number" }
+            ],
+            "description": "距中线距离：D 表达式或 mm 数值；方向由编码中的 F/B/L/R 决定"
+          },
+          "note": { "type": "string" }
+        }
+      }
+    }
+  }
+}

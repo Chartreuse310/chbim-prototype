@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CHBIM 构件定义",
+  "type": "object",
+  "required": ["type", "name", "category", "params", "instances"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "构件类型编码（拼音小写），须与 core/members/ 中的 OpenSCAD 模块同名，如 yanzhu"
+    },
+    "name": { "type": "string", "description": "中文名称，如 檐柱" },
+    "category": { "type": "string", "description": "大类，如 柱" },
+    "params": {
+      "type": "object",
+      "description": "参数表：值为 D 表达式（如 11D）或 mm 数值，由 resolver 求值",
+      "required": ["height", "diameter"],
+      "properties": {
+        "height": { "type": ["string", "number"] },
+        "diameter": { "type": ["string", "number"] }
+      }
+    },
+    "instances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "axes"],
+        "properties": {
+          "id": { "type": "string" },
+          "axes": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": { "type": "string" },
+            "description": "交点定位：须一横（CAO/TUAN 类）一纵（JIAN 类），交点即构件中心"
+          }
+        }
+      }
+    }
+  }
+}

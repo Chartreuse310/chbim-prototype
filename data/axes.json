@@ -1,0 +1,16 @@
+{
+  "module": {
+    "D_mm": 300,
+    "note": "整体模数 D=柱径，单位 mm，可由交互层覆盖"
+  },
+  "axes": [
+    { "id": "CAO_Fo",  "kind": "CAO",  "distance": "2D", "note": "前槽缝（外）" },
+    { "id": "CAO_Ro",  "kind": "CAO",  "distance": "2D", "note": "后槽缝（外）" },
+    { "id": "JIAN_L1", "kind": "JIAN", "distance": "4D", "note": "左一间缝" },
+    { "id": "JIAN_C",  "kind": "JIAN", "distance": "0",  "note": "间中缝（明间中线）" },
+    { "id": "JIAN_R1", "kind": "JIAN", "distance": "4D", "note": "右一间缝" },
+    { "id": "TUAN_0",  "kind": "TUAN", "distance": "0",  "note": "脊槫缝（V1 仅作辅助线）" },
+    { "id": "TUAN_F1", "kind": "TUAN", "distance": "1D", "note": "前上平槫缝（V1 仅作辅助线）" },
+    { "id": "TUAN_B1", "kind": "TUAN", "distance": "1D", "note": "后上平槫缝（V1 仅作辅助线）" }
+  ]
+}

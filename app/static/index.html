@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHBIM 工作台 · Prototype V1</title>
+<style>
+  :root { --bg:#fafafa; --panel:#fff; --border:#e5e7eb; --muted:#6b7280;
+          --accent:#185fa5; --accent-soft:#e6f1fb; --danger:#a32d2d; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.5 -apple-system, "PingFang SC", "Songti SC",
+        "Helvetica Neue", Arial, sans-serif; color: #1f2328; background: var(--bg); }
+  header { padding: 12px 20px; background: var(--panel); border-bottom: 1px solid var(--border);
+           display: flex; align-items: baseline; gap: 12px; }
+  header h1 { margin: 0; font-size: 15px; font-weight: 500; }
+  header .tag { color: var(--muted); font-size: 12px; }
+  main { display: grid; grid-template-columns: 320px 1fr; min-height: calc(100vh - 50px); }
+  aside { background: var(--panel); border-right: 1px solid var(--border);
+          padding: 16px; overflow-y: auto; }
+  section.viewer { padding: 16px; overflow: auto; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  input[type=number] { width: 100%; padding: 6px 8px; border: 1px solid var(--border);
+          border-radius: 6px; font-size: 14px; }
+  button { background: var(--accent); color: #fff; border: 0; border-radius: 6px;
+           padding: 8px 14px; font-size: 14px; cursor: pointer; }
+  button:disabled { background: #9ca3af; cursor: progress; }
+  button:hover:not(:disabled) { filter: brightness(1.08); }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; }
+  h3 { font-size: 13px; font-weight: 500; margin: 16px 0 8px; color: var(--muted); }
+  #status { font-size: 12px; color: var(--muted); margin: 8px 0; min-height: 18px; }
+  #status.err { color: var(--danger); }
+  .preview-box { background: #fff; border: 1px solid var(--border); border-radius: 8px;
+                 padding: 12px; margin-bottom: 12px; }
+  .preview-box h3 { margin-top: 0; }
+  #canvas3d { width: 100%; height: 360px; background: #f3f4f6; border-radius: 6px; }
+  #preview { max-width: 100%; max-height: 240px; }
+  .exports { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .exports a { background: var(--accent-soft); color: var(--accent); text-decoration: none;
+               padding: 4px 10px; border-radius: 14px; font-size: 12px; }
+  .exports a:hover { background: #d3e1f3; }
+  figure { margin: 0; }
+  figcaption { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .sheet-img { max-width: 100%; border: 1px solid var(--border); border-radius: 4px; }
+  code { font-family: ui-monospace, "SF Mono", Menlo, monospace; background: #f3f4f6;
+         padding: 1px 4px; border-radius: 3px; font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>CHBIM 工作台</h1>
+  <span class="tag">Prototype V1 · 以 OpenSCAD 为建模核心</span>
+</header>
+<main>
+  <aside>
+    <label>整体模数 D（柱径，mm）</label>
+    <input id="D" type="number" value="300" step="10" min="50" max="2000">
+    <div style="margin-top:12px">
+      <button id="build">生成模型与图纸</button>
+    </div>
+    <div id="status">输入 D 后点击「生成」。</div>
+
+    <h3>轴线（缝）</h3>
+    <table id="axes-table">
+      <thead><tr><th>id</th><th>kind</th><th>距中线</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <h3>构件</h3>
+    <table id="members-table">
+      <thead><tr><th>id</th><th>名称</th><th>x / y (mm)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </aside>
+
+  <section class="viewer">
+    <div class="preview-box">
+      <h3>3D 预览</h3>
+      <div id="canvas3d"></div>
+      <img id="preview" alt="OpenSCAD 渲染" style="display:none">
+    </div>
+    <div class="preview-box">
+      <h3>导出（stl / obj / svg / pdf）</h3>
+      <div class="exports" id="exports">
+        <span class="tag">生成模型后显示下载链接</span>
+      </div>
+    </div>
+    <div class="preview-box">
+      <h3>图纸</h3>
+      <figure>
+        <img id="sheet" class="sheet-img" alt="三视图图纸" src="">
+        <figcaption>三视图（第一角投影）· 边缘线 / 辅助线 · 图名 · 比例尺 · 日期</figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+const $ = s => document.querySelector(s);
+const status = msg => { const el = $("#status"); el.classList.remove("err"); el.textContent = msg; };
+const err    = msg => { const el = $("#status"); el.classList.add("err");    el.textContent = msg; };
+
+// 三视图初装：拉数据
+async function loadData() {
+  try {
+    const r = await fetch("/api/data");
+    const data = await r.json();
+    renderAxes(data.axes);
+    renderMembers(data.member_types);
+    if (data.default_D) $("#D").value = data.default_D;
+  } catch (e) { err("加载数据失败：" + e.message); }
+}
+function renderAxes(axes) {
+  const tb = $("#axes-table tbody"); tb.innerHTML = "";
+  for (const a of axes) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td><code>${a.id}</code></td><td>${a.kind}</td>
+      <td>${a.distance}</td>`;
+    tb.appendChild(tr);
+  }
+}
+function renderMembers(types) {
+  const tb = $("#members-table tbody"); tb.innerHTML = "";
+  for (const t of types) {
+    for (const i of t.instances) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td><code>${i.id}</code></td>
+        <td>${t.name}</td><td>— <span class="tag">待生成</span></td>`;
+      tb.appendChild(tr);
+    }
+  }
+}
+
+// 生成 + 渲染
+$("#build").onclick = async () => {
+  const D = parseFloat($("#D").value);
+  if (!D || D <= 0) return err("请输入有效的 D 值");
+  const btn = $("#build"); btn.disabled = true;
+  status("生成中（OpenSCAD 6 次调用，约 3-8 秒）…");
+  try {
+    const r = await fetch("/api/build", { method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ D }) });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.error || r.statusText); }
+    const result = await r.json();
+    renderMembersResolved(result.spec.members);
+    renderFiles(result.files);
+    status(`已生成 ${result.spec.members.length} 根柱 · D=${D}mm`);
+    loadPreview();
+    load3D();
+  } catch (e) { err("生成失败：" + e.message); }
+  finally { btn.disabled = false; }
+};
+
+function renderMembersResolved(members) {
+  const tb = $("#members-table tbody"); tb.innerHTML = "";
+  for (const m of members) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td><code>${m.id}</code></td>
+      <td>${m.name}</td><td>${m.x.toFixed(0)} / ${m.y.toFixed(0)}</td>`;
+    tb.appendChild(tr);
+  }
+}
+
+function renderFiles(files) {
+  const box = $("#exports");
+  box.innerHTML = "";
+  for (const [k, v] of Object.entries(files)) {
+    if (k === "spec") continue;
+    const a = document.createElement("a");
+    a.href = "/files/" + v.split("/").pop();
+    a.textContent = k.toUpperCase();
+    a.download = a.textContent + "-" + $("#D").value + "mm";
+    box.appendChild(a);
+  }
+}
+
+function loadPreview() {
+  const img = $("#preview");
+  img.src = "/files/preview.png?t=" + Date.now();
+  img.style.display = "block";
+  const sh = $("#sheet");
+  sh.src = "/files/sheet.svg?t=" + Date.now();
+}
+
+let scene, camera, renderer, controls;
+async function load3D() {
+  const canvasBox = $("#canvas3d");
+  try {
+    const THREE = await import("three");
+    const { STLLoader } = await import("three/addons/loaders/STLLoader.js");
+    const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
+    if (renderer) { renderer.dispose(); canvasBox.innerHTML = ""; }
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf3f4f6);
+    const aspect = canvasBox.clientWidth / 360;
+    camera = new THREE.PerspectiveCamera(50, aspect, 1, 100000);
+    camera.position.set(3000, -3000, 2500);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(canvasBox.clientWidth, 360);
+    canvasBox.appendChild(renderer.domElement);
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0, 1000); controls.update();
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+    dir.position.set(5000, -5000, 5000); scene.add(dir);
+    const grid = new THREE.GridHelper(8000, 16, 0xcccccc, 0xe5e7eb);
+    grid.position.z = -1; scene.add(grid);
+    const loader = new STLLoader();
+    loader.load("/files/model.stl?t=" + Date.now(), (geo) => {
+      geo.center();
+      geo.computeBoundingBox();
+      const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial(
+        { color: 0x185fa5, metalness: 0.05, roughness: 0.7 }));
+      scene.add(mesh);
+      const box = geo.boundingBox;
+      const r = Math.max(
+        box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z);
+      camera.position.set(r * 1.2, -r * 1.2, r * 0.8);
+      controls.target.set(0, 0, (box.max.z + box.min.z) / 2); controls.update();
+    });
+    (function tick() { requestAnimationFrame(tick); renderer.render(scene, camera); })();
+  } catch (e) {
+    canvasBox.innerHTML = "<div style='padding:20px;color:#6b7280;font-size:12px'>"
+      + "three.js 加载失败（" + e.message + "），已显示下方 OpenSCAD 渲染图作为兜底。</div>";
+  }
+}
+
+loadData();
+</script>
+</body>
+</html>

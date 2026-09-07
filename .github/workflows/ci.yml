@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装 OpenSCAD 与 reportlab
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad
+          pip install reportlab
+      - name: 运行冒烟测试
+        run: python -m unittest discover -s tests -v

@@ -1,0 +1,58 @@
+# CHBIM 缝与构件编码规则
+
+> 规则源：用户给出的营造法式风格编码表（参考 `openscad.org` 的参数化
+> 建模理念，但坐标体系遵循中国传统营造术语）。
+
+## 字段
+
+| 类型 | 描述 | 编码示例 |
+|---|---|---|
+| 朝向 | F：正（front）/ B：背（back）/ L：左（left）/ R：右（right） | |
+| 内外 | i：内（inner）/ o：外（outer） | |
+| 位置 | 0+：距中线距离（mm 或 D 表达式） | |
+| 缝   | CAO 槽缝 / JIAN 间缝 / FU 栿缝 / TUAN 槫缝 / TUANJIAN 槫间缝 / PUZUO 铺作缝 / TIAO 跳心缝 | `CAO_Fo`（前槽缝外侧）`JIAN_L1`（左一间缝）`TUAN_0`（中槫缝）`TUAN_F1`（前第 1 槫缝）|
+| 构件 | 名称拼音小写 + 参数（mm 或 D 表达式）+ 所属缝 | `yanzhu[CAO_Fo, JIAN_L1]` |
+
+## 缝编码结构
+
+缝编码形如 `{KIND}_{SUFFIX}`：
+
+- `KIND`：上述 7 种缝类型之一
+- `SUFFIX`：正则 `^([FBLR]?)(\d*)([ioC]?)$`
+  - 第 1 段：朝向（可选）
+  - 第 2 段：序数（可选，如 `L1` 的 1）
+  - 第 3 段：内外或中心标记（可选，`C` 表示间中缝）
+
+## 缝的平面走向
+
+| 类型 | 走向 | 位置定义于 |
+|---|---|---|
+| CAO / TUAN / TUANJIAN | 沿 X（面阔方向）延伸 | Y 轴（前后） |
+| JIAN | 沿 Y（进深方向）延伸 | X 轴（左右） |
+
+FU / PUZUO / TIAO 的走向尚未定义（V2 再议）。
+
+## 构件位置：交点定位（V1）
+
+构件的 `instances[].axes` 须**一横一纵**（如 `["CAO_Fo", "JIAN_L1"]`），
+构件中心 = 两条缝的交点坐标。
+
+不满足的实例在 `resolver.resolve` 时抛错并提示使用 `instances` 枚举。
+整排布置的紧凑写法（开放项）见 `docs/adr/ADR-0004.md`。
+
+## 数据层 JSON 映射
+
+缝定义示例（`data/axes.json`）：
+
+```json
+{ "id": "CAO_Fo",  "kind": "CAO",  "distance": "2D", "note": "前槽缝（外）" }
+```
+
+构件实例示例（`data/members/yanzhu.json`）：
+
+```json
+{ "id": "YZ-01", "axes": ["CAO_Fo", "JIAN_L1"] }
+```
+
+D 表达式（`"11D"`、`"2D"`）由 `bridge/resolver.py` 在生成代码前求值为
+mm 数值，OpenSCAD 永远接收纯数字。
