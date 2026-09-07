@@ -72,7 +72,10 @@ V1 缝编码遵循“基于缝的编码体系”（详见 [docs/coding-system.md
 
 ## 协议
 
-MIT License —— 见 [LICENSE](LICENSE)。
+- **代码**：MIT License —— 见 [LICENSE](LICENSE)。
+- **文档与编码体系**：暂保留所有权利（学术论文准备中），见
+  [LICENSE-docs.md](LICENSE-docs.md)；论文见刊后将变更为 CC BY 4.0。
 
 > 仅以进程级调用 OpenSCAD 可执行文件，仓库代码不链接其任何库，
-> 因此不受 OpenSCAD GPL 传染。研究者引用、改写、再发布均无负担。
+> 因此不受 OpenSCAD GPL 传染。研究者引用、改写、再发布代码均无负担；
+> 引用文档中的编码体系请先联系作者（学术引用与讨论不受限）。
