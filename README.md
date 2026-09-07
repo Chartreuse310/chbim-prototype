@@ -59,6 +59,7 @@ V1 缝编码遵循“基于缝的编码体系”（详见 [docs/coding-system.md
 ## 文档导航
 
 - [PROGRESS.md](PROGRESS.md) —— 功能矩阵与需求池
+- [docs/users.md](docs/users.md) —— 用户画像与工作流 / 痛点分析
 - [docs/DECISIONS.md](docs/DECISIONS.md) —— 当前生效的架构决策索引
 - [docs/coding-system.md](docs/coding-system.md) —— 基于缝的编码体系
 - [docs/adr/](docs/adr/) —— 架构决策记录（不可变）
