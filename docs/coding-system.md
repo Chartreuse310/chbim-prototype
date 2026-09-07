@@ -81,5 +81,13 @@ FU / PUZUO / TIAO 的走向尚未定义（V2 再议）。
 - 构件用小写、缝 `KIND` 用大写，正好区分两个命名空间
 - 示例：`yanzhu_01`；将来的 `efang_01`（额枋）、`dougong_01`（斗栱）同规则
 
+## 术语英文对照
+
+| 中文 | 英文 | 说明 |
+|---|---|---|
+| 构件 | **member** | 对齐 IFC 术语（线性构件实体即 `IfcMember`）；刻意不用 component——它在软件语境默认指 UI 组件（React/Vue），英文文档中会产生"建筑构件 vs 软件组件"歧义 |
+| 缝 | axis（seam） | 控制构件定位的辅助线；代码中 `RUNS_X`/`RUNS_Y` 描述其平面走向 |
+| 构件类型 | member type | `data/members/{type}.json`，文件名 = type = ID 前缀 |
+
 D 表达式（`"11D"`、`"2D"`）由 `bridge/resolver.py` 在生成代码前求值为
 mm 数值，OpenSCAD 永远接收纯数字。
