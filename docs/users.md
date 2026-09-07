@@ -15,7 +15,7 @@
   - P-a：AutoCAD/SketchUp 手工绘图重复劳动大，改一个尺寸要全图重排 `[TODO: 求证]`
   - P-b：现有多数参数化工具（Grasshopper 等）门槛高、难版本化、难复现
   - P-c：古建术语与坐标体系缺乏公开编码标准，各自为政 `[TODO: 与论文相关工作对照]`
-- **对应需求**：P-a → 尺寸标注 [P0]、整排 pattern（开放问题 1）；P-b → JSON 数据层、CLI/Makefile、CI；P-c → coding-system.md 本身
+- **对应需求**：P-a → 尺寸标注 [P0]、整排 pattern（开放问题 1）；P-b → JSON 数据层、CLI/Makefile、CI；P-c → coding-system.md 本身；构件筛选（G15）← 工作流步骤 2/3 中"核对某缝上的构件"场景 `[TODO: 求证使用频率]`
 
 ## 用户二：游戏开发者 / 技术美术（次要用户）
 
