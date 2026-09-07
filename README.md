@@ -12,16 +12,20 @@ Chinese Historic Building Information Modeling——基于中国古代营造体�
 
 ## 示例输出（D=300，快照于 v0.3.0 语义）
 
-<p>
-  <img src="docs/images/sheet-sample.svg" width="620" alt="三视图图纸示例（SVG）">
-</p>
-<p>
-  <img src="docs/images/preview-sample.png" width="300" alt="3D 预览示例（PNG）">
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/images/sheet-sample.svg" width="339" alt="三视图图纸示例（SVG）"><br>
+      <sub>三视图图纸 · <code>make build D=300</code>（A4，GB/T 50001-2017 图框/标题栏）</sub>
+    </td>
+    <td align="center">
+      <img src="docs/images/preview-sample.png" width="320" alt="3D 预览示例（PNG）"><br>
+      <sub>同一模型（STL）的离屏渲染</sub>
+    </td>
+  </tr>
+</table>
 
-- 左：`make build D=300` 生成的三视图图纸（A4，GB/T 50001-2017 图框/标题栏）
-- 右：three.js 预览所用的同一模型（STL）的离屏渲染
-- 快照由 `make snapshot` 手动刷新；`build/` 本身不入库
+快照由 `make snapshot` 手动刷新；`build/` 本身不入库。
 
 ---
 
