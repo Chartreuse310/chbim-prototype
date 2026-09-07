@@ -2,12 +2,7 @@
 
 **以 OpenSCAD 为几何核心的中国古建参数化建模原型**
 
-Chinese Historic Building Information Modeling——基于中国古代营造体系的 BIM 组织方法 Prototype V1
-是一个面向研究者的开源可行性验证原型。目标是用
-[OpenSCAD](https://openscad.org) 作为脚本化、可版本化、可复现的几何
-核心，把轴线（缝）与构件用 JSON 数据描述，由 Python 粘合层把它们
-转成 OpenSCAD 实例代码，并自动导出可在 Blender / Adobe Illustrator /
-AutoCAD 复用的模型与三视图图纸。
+Chinese Historic Building Information Modeling——基于中国古代营造体系的 BIM 组织方法 Prototype V1 是一个面向研究者的开源可行性验证原型。目标是用 [OpenSCAD](https://openscad.org) 作为脚本化、可版本化、可复现的几何核心，把轴线（缝）与构件用 JSON 数据描述，由 Python 粘合层把它们转成 OpenSCAD 实例代码，并自动导出可在 Blender / Adobe Illustrator / AutoCAD 复用的模型与三视图图纸。
 
 > **当前能力**：仅 yanzhu（檐柱），Web 工作台支持 D 模数即时调整。
 > 见 [PROGRESS.md](PROGRESS.md) 与 [docs/DECISIONS.md](docs/DECISIONS.md)
@@ -72,11 +67,7 @@ V1 缝编码遵循“基于缝的编码体系”（详见 [docs/coding-system.md
 
 ## 致谢 Acknowledgments
 
-本项目为「人机协作」开发：作者负责架构设计、营造术语与编码体系的全部
-学术决策；[WorkBuddy](https://www.workbuddy.cn) 平台（含其 Skill 技能
-体系）及所驱动的 GLM 系列大模型（开发期间使用 GLM-5.3 与
-GLM-5.3-Flash，截至 2026-09；模型版本持续更新）承担了代码脚手架、
-文档初稿与工程实现辅助。
+本项目为「人机协作」开发：作者负责架构设计、营造术语与编码体系的全部学术决策；[WorkBuddy](https://www.workbuddy.cn) 平台及 GLM 系列大模型（开发期间使用 GLM-5.3 与 GLM-5.3-Flash，截至 2026-09）承担了代码脚手架、文档初稿与工程实现辅助。
 
 - AI 参与范围：代码实现辅助、文档起草、测试搭建；所有架构决策与
   学术内容（缝编码体系等）均由作者审定并对内容负责。
