@@ -68,7 +68,7 @@ V1 缝编码遵循“基于缝的编码体系”（详见 [docs/coding-system.md
 
 ## 致谢 Acknowledgments
 
-本项目为「人机协作」开发：作者负责架构设计、营造术语与编码体系的全部学术决策；[WorkBuddy](https://www.workbuddy.cn) 平台及 GLM 系列大模型（开发期间使用 GLM-5.3 与 GLM-5.3-Flash，截至 2026-09）承担了代码脚手架、文档初稿与工程实现辅助；[Trae](https://www.trae.ai) IDE（Trae Work + GLM-5.3）完成了需求盘点 PRD 初稿（已并入 [PROGRESS.md](PROGRESS.md)），并参与部分开发与调试。
+本项目为「人机协作」开发：作者负责架构设计、营造术语与编码体系的全部学术决策；[WorkBuddy](https://www.workbuddy.cn) 、[Trae](https://www.trae.ai) 及 GLM 系列大模型（开发期间使用 GLM-5.3 与 GLM-5.3-Flash，截至 2026-09）承担了代码脚手架、文档初稿与工程实现辅助。
 
 - AI 参与范围：代码实现辅助、文档起草、测试搭建；所有架构决策与
   学术内容（缝编码体系等）均由作者审定并对内容负责。
