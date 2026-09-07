@@ -103,7 +103,7 @@
 
 💡 Windows 平台验证：当前仅 macOS 开发验证 + Linux CI（G13）。
 
-💡 翻译：中英双语 README、ADR。
+💡 翻译：ADR 与其余文档英译（README 已双语，v0.2.1）。
 
 ## 开放问题（待决策）
 

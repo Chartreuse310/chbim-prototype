@@ -10,3 +10,15 @@
 | [ADR-0004](adr/ADR-0004-position-semantics.md) | 构件位置 = 所属缝的交点 | ✅ 生效（附开放项） | 一横一纵；整排布置的紧凑写法待排 |
 | [ADR-0005](adr/ADR-0005-license-mit.md) | 开源协议选 MIT | ✅ 生效 | 仅调用 OpenSCAD CLI，代码不受其 GPL 传染 |
 | [ADR-0006](adr/ADR-0006-interaction-web-workbench.md) | V1 交互层用 Web 工作台 | ✅ 生效 | 标准库 HTTP + 静态前端 + three.js CDN（PNG 兜底） |
+| [ADR-0007](adr/ADR-0007-orientation-convention.md) | 朝向约定：坐北朝南，方向字母以建筑自身为基准 | ✅ 生效 | F=南/B=北/L=东/R=西；CAO 走向按方向字母分流（F/B→X，L/R→Y）；**部分修正 ADR-0004 的前提**——CAO F/B × CAO L/R 现在存在交点（角柱） |
+
+## 其他生效决策（记录于专门文档）
+
+| 决策 | 状态 | 记录位置 |
+|---|---|---|
+| 构件实例 ID 命名：`{类型全拼小写}_{序号}`（如 yanzhu_01） | ✅ 生效（schema 强校验） | [coding-system.md](coding-system.md) |
+| 术语：构件英文 = member（对齐 IFC，不用 component） | ✅ 生效 | [coding-system.md](coding-system.md) |
+| 轴线编号双轨：缝编码 `id` 主键 + `gb_no` 自动推导（决策点 A） | ✅ 生效（Phase 2 实施） | [drawing-standard.md](drawing-standard.md) |
+| 图纸线宽组 b=0.7 / 标题栏简化版 / 字体暂用 STSong（决策点 B/C/D） | ✅ 生效（Phase 1 已实施） | [drawing-standard.md](drawing-standard.md) |
+| 著作权双轨：代码 MIT，文档暂保留所有权利（论文见刊后 CC BY 4.0） | ✅ 生效 | [LICENSE-docs.md](../LICENSE-docs.md) |
+| 版本策略：0.x 迭代，达成毕业条件后发 1.0.0 | ✅ 生效 | [PROGRESS.md](../PROGRESS.md) |
