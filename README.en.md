@@ -4,7 +4,7 @@
 
 **A parametric modeling prototype for traditional Chinese timber-frame architecture, with OpenSCAD as the geometry core**
 
-Chinese Historic Building Information Modeling — a BIM organization method based on traditional Chinese construction practice. Prototype V1 is an open-source feasibility study aimed at researchers: [OpenSCAD](https://openscad.org) serves as a scriptable, versionable, reproducible geometry core; axis lines (*seams*) and members are described as JSON data; a Python glue layer converts them into OpenSCAD instance code and automatically exports models and three-view drawings reusable in Blender / Adobe Illustrator / AutoCAD.
+Chinese Historic Building Information Modeling — a BIM organization method based on traditional Chinese construction practice. Prototype V1 is an open-source feasibility study aimed at researchers, heritage-architecture enthusiasts, and creators who need to produce traditional-architecture models quickly: [OpenSCAD](https://openscad.org) serves as a scriptable, versionable, reproducible geometry core; axis lines (*seams*) and members are described as JSON data; a Python glue layer converts them into OpenSCAD instance code and automatically exports models and three-view drawings reusable in Blender / Adobe Illustrator / AutoCAD.
 
 > **Current scope**: the *yanzhu* (eave column) only; the Web workbench supports
 > real-time adjustment of the modular diameter D. See [PROGRESS.md](PROGRESS.md)

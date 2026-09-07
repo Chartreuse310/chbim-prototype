@@ -4,7 +4,7 @@
 
 **以 OpenSCAD 为几何核心的中国古建参数化建模原型**
 
-Chinese Historic Building Information Modeling——基于中国古代营造体系的 BIM 组织方法 Prototype V1 是一个面向研究者的开源可行性验证原型。目标是用 [OpenSCAD](https://openscad.org) 作为脚本化、可版本化、可复现的几何核心，把轴线（缝）与构件用 JSON 数据描述，由 Python 粘合层把它们转成 OpenSCAD 实例代码，并自动导出可在 Blender / Adobe Illustrator / AutoCAD 复用的模型与三视图图纸。
+Chinese Historic Building Information Modeling——基于中国古代营造体系的 BIM 组织方法 Prototype V1 是一个面向研究者、古建筑爱好者和需要快速制作古建筑模型的创作者的开源可行性验证原型。目标是用 [OpenSCAD](https://openscad.org) 作为脚本化、可版本化、可复现的几何核心，把轴线（缝）与构件用 JSON 数据描述，由 Python 粘合层把它们转成 OpenSCAD 实例代码，并自动导出可在 Blender / Adobe Illustrator / AutoCAD 复用的模型与三视图图纸。
 
 > **当前能力**：仅 yanzhu（檐柱），Web 工作台支持 D 模数即时调整。
 > 见 [PROGRESS.md](PROGRESS.md) 与 [docs/DECISIONS.md](docs/DECISIONS.md)
