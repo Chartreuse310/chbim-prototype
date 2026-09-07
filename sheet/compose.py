@@ -253,13 +253,22 @@ def _render_pdf(prims: list, path: Path) -> None:
     from reportlab.lib.units import mm
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+    from reportlab.pdfbase.ttfonts import TTFont
     from reportlab.pdfgen import canvas as rl_canvas
 
-    pdfmetrics.registerFont(UnicodeCIDFont("STSong-Light"))
+    # 字体：优先嵌入 FandolFang（长仿宋，GPL+字体例外，可再分发），
+    # PDF 内嵌子集 → 任何阅读器显示一致；缺文件时回退 STSong-Light（CID 不嵌入）
+    try:
+        font_path = Path(__file__).resolve().parent.parent / "assets" / "fonts" / "FandolFang-Regular.ttf"
+        pdfmetrics.registerFont(TTFont("FandolFang", str(font_path)))
+        font = "FandolFang"
+    except Exception:
+        pdfmetrics.registerFont(UnicodeCIDFont("STSong-Light"))
+        font = "STSong-Light"
+
     c = rl_canvas.Canvas(str(path), pagesize=(PAGE_W * mm, PAGE_H * mm))
     c.setTitle("CHBIM 三视图图纸")
     c.scale(mm, mm)  # 之后所有坐标 / 线宽 / 字号均以 mm 计
-    font = "STSong-Light"
 
     for p in prims:
         k = p[0]

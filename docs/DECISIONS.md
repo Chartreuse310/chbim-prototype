@@ -19,6 +19,7 @@
 | 构件实例 ID 命名：`{类型全拼小写}_{序号}`（如 yanzhu_01） | ✅ 生效（schema 强校验） | [coding-system.md](coding-system.md) |
 | 术语：构件英文 = member（对齐 IFC，不用 component） | ✅ 生效 | [coding-system.md](coding-system.md) |
 | 轴线编号双轨：缝编码 `id` 主键 + `gb_no` 自动推导（决策点 A） | ✅ 生效（Phase 2 实施） | [drawing-standard.md](drawing-standard.md) |
-| 图纸线宽组 b=0.7 / 标题栏简化版 / 字体暂用 STSong（决策点 B/C/D） | ✅ 生效（Phase 1 已实施） | [drawing-standard.md](drawing-standard.md) |
+| 图纸线宽组 b=0.7 / 标题栏简化版（决策点 B/C） | ✅ 生效（Phase 1 已实施） | [drawing-standard.md](drawing-standard.md) |
+| 图纸字体：嵌入 FandolFang 长仿宋（GPL+字体例外，OTF→TTF 子集嵌入；决策点 D） | ✅ 生效 | [drawing-standard.md](drawing-standard.md) |
 | 著作权双轨：代码 MIT，文档暂保留所有权利（论文见刊后 CC BY 4.0） | ✅ 生效 | [LICENSE-docs.md](../LICENSE-docs.md) |
 | 版本策略：0.x 迭代，达成毕业条件后发 1.0.0 | ✅ 生效 | [PROGRESS.md](../PROGRESS.md) |
