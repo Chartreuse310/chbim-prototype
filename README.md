@@ -2,7 +2,7 @@
 
 **以 OpenSCAD 为几何核心的中国古建参数化建模原型**
 
-CHBIM（Chinese Heritage Building Information Modeling）Prototype V1
+Chinese Historic Building Information Modeling——基于中国古代营造体系的 BIM 组织方法 Prototype V1
 是一个面向研究者的开源可行性验证原型。目标是用
 [OpenSCAD](https://openscad.org) 作为脚本化、可版本化、可复现的几何
 核心，把轴线（缝）与构件用 JSON 数据描述，由 Python 粘合层把它们
@@ -52,7 +52,7 @@ make test           # 运行冒烟测试
 
 ## 编码体系
 
-V1 缝编码遵循[营造法式]传统（详见 [docs/coding-system.md](docs/coding-system.md)）：
+V1 缝编码遵循“基于缝的编码体系”（详见 [docs/coding-system.md](docs/coding-system.md)）：
 
 - 朝向：`F` 正 / `B` 背 / `L` 左 / `R` 右
 - 内外：`i` 内 / `o` 外
@@ -65,7 +65,7 @@ V1 缝编码遵循[营造法式]传统（详见 [docs/coding-system.md](docs/cod
 
 - [PROGRESS.md](PROGRESS.md) —— 功能矩阵与需求池
 - [docs/DECISIONS.md](docs/DECISIONS.md) —— 当前生效的架构决策索引
-- [docs/coding-system.md](docs/coding-system.md) —— 缝与构件编码规则
+- [docs/coding-system.md](docs/coding-system.md) —— 基于缝的编码体系
 - [docs/adr/](docs/adr/) —— 架构决策记录（不可变）
 - [docs/journal/](docs/journal/) —— 开发日志（成败都记）
 - [CHANGELOG.md](CHANGELOG.md) —— release 变更
