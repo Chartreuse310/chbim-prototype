@@ -4,8 +4,8 @@
     "note": "整体模数 D=柱径，单位 mm，可由交互层覆盖"
   },
   "axes": [
-    { "id": "CAO_Fo",  "kind": "CAO",  "distance": "2D", "note": "前槽缝（外）" },
-    { "id": "CAO_Ro",  "kind": "CAO",  "distance": "2D", "note": "后槽缝（外）" },
+    { "id": "CAO_Fo",  "kind": "CAO",  "distance": "2D", "note": "前槽缝（南侧，沿面阔）" },
+    { "id": "CAO_Bo",  "kind": "CAO",  "distance": "2D", "note": "后槽缝（北侧，沿面阔）" },
     { "id": "JIAN_L1", "kind": "JIAN", "distance": "4D", "note": "左一间缝" },
     { "id": "JIAN_0",  "kind": "JIAN", "distance": "0",  "note": "间中缝（明间中线）" },
     { "id": "JIAN_R1", "kind": "JIAN", "distance": "4D", "note": "右一间缝" },

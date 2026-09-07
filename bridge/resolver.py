@@ -17,18 +17,32 @@ from pathlib import Path
 _EXPR_RE = re.compile(r"^\s*(\d+(?:\.\d+)?)\s*D\s*$")
 _SUFFIX_RE = re.compile(r"^([FBLR]?)(\d*)([io]?)$")
 
-# 缝类型 → 平面走向：
-#   RUNS_X：沿 X（面阔）延伸、位置定义在 Y（前后）—— 槽缝、槫缝
-#   RUNS_Y：沿 Y（进深）延伸、位置定义在 X（左右）—— 间缝
-RUNS_X = {"CAO", "TUAN", "TUANJIAN"}
-RUNS_Y = {"JIAN"}
+# 朝向约定（坐北朝南；方向字母以建筑自身朝向为基准，非看图者视角）：
+#   F=南（前） B=北（后） L=东（建筑左手） R=西（建筑右手）
+#   坐标：+X=东（面阔向右） +Y=北（进深向上）；平面图绘制时北在上
+# 走向由 KIND + 方向字母共同决定：
+#   CAO：F/B 线沿 X（定位 y，前后槽）；L/R 线沿 Y（定位 x，东西槽）
+#   JIAN：沿 Y（定位 x）；TUAN / TUANJIAN：沿 X（定位 y）
+#   FU / PUZUO / TIAO：未定义
 _KNOWN = {"CAO", "JIAN", "FU", "TUAN", "TUANJIAN", "PUZUO", "TIAO"}
+_RUNS_Y_DIRS = ("L", "R")  # 仅 CAO 依方向字母分流
 
-# 朝向字母的符号因缝走向而异：
-#   X 走向（CAO/TUAN 等，定位 y）：F=+Y, B=−Y, R=−Y（rear = 后）
-#   Y 走向（JIAN，定位 x）：L=−X, R=+X
-_SIGN_XRUN = {"F": 1, "B": -1, "R": -1}
-_SIGN_YRUN = {"L": -1, "R": 1}
+# 符号表（按定位轴划分）：
+#   定位 y（南北向）：F=−1（南） B=+1（北）
+#   定位 x（东西向）：L=+1（东） R=−1（西）
+_SIGN_YPOS = {"F": -1, "B": 1}
+_SIGN_XPOS = {"L": 1, "R": -1}
+
+
+def _runs_for(kind: str, direction: str | None) -> str | None:
+    """缝的平面走向：返回 "X"/"Y"，未定义返回 None。"""
+    if kind == "JIAN":
+        return "Y"
+    if kind == "CAO":
+        return "Y" if direction in _RUNS_Y_DIRS else "X"
+    if kind in ("TUAN", "TUANJIAN"):
+        return "X"
+    return None  # FU / PUZUO / TIAO 留待后续版本
 
 
 def eval_expr(expr, D: float) -> float:
@@ -66,15 +80,16 @@ def parse_axis_id(axis_id: str) -> dict:
 def resolve_axis(axis: dict, D: float) -> dict:
     p = parse_axis_id(axis["id"])
     kind = p["kind"]
-    if kind not in RUNS_X and kind not in RUNS_Y:
+    runs = _runs_for(kind, p["direction"])
+    if runs is None:
         raise NotImplementedError(
             f"缝类型 {kind} 的平面走向尚未定义（FU/PUZUO/TIAO 留待后续版本）")
     dist = eval_expr(axis.get("distance", 0), D)
-    sign_map = _SIGN_XRUN if kind in RUNS_X else _SIGN_YRUN
+    sign_map = _SIGN_XPOS if runs == "Y" else _SIGN_YPOS
     coord = dist * sign_map.get(p["direction"], 0)
     return {
         "id": axis["id"], "kind": kind,
-        "runs": "X" if kind in RUNS_X else "Y",
+        "runs": runs,
         "coord": coord, "direction": p["direction"],
         "inner_outer": p["inner_outer"], "note": axis.get("note", ""),
     }
