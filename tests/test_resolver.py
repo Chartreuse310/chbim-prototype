@@ -57,11 +57,11 @@ class TestResolve(unittest.TestCase):
 
     def test_members_intersection(self):
         yz = {m["id"]: m for m in self.spec["members"]}
-        self.assertEqual(yz["YZ-01"]["x"], -1200)      # JIAN_L1
-        self.assertEqual(yz["YZ-01"]["y"], 600)        # CAO_Fo
-        self.assertEqual(yz["YZ-01"]["height_mm"], 3300.0)
-        self.assertEqual(yz["YZ-01"]["diameter_mm"], 300.0)
-        self.assertEqual(yz["YZ-04"]["y"], -600)       # CAO_Ro
+        self.assertEqual(yz["yanzhu_01"]["x"], -1200)   # JIAN_L1
+        self.assertEqual(yz["yanzhu_01"]["y"], 600)     # CAO_Fo
+        self.assertEqual(yz["yanzhu_01"]["height_mm"], 3300.0)
+        self.assertEqual(yz["yanzhu_01"]["diameter_mm"], 300.0)
+        self.assertEqual(yz["yanzhu_04"]["y"], -600)    # CAO_Ro
 
     def test_bbox(self):
         bb = self.spec["bbox"]
@@ -84,7 +84,7 @@ class TestResolve(unittest.TestCase):
                 "module_note": "",
                 "member_types": [{"type": "yanzhu", "name": "檐柱", "category": "柱",
                     "params": {"height": "11D", "diameter": "1D"},
-                    "instances": [{"id": "YZ-X", "axes": ["CAO_Fo", "CAO_Ro"]}]}],
+                    "instances": [{"id": "yanzhu_01", "axes": ["CAO_Fo", "CAO_Ro"]}]}],
             }, D=300)
         self.assertIn("交点定位", str(cm.exception))
 

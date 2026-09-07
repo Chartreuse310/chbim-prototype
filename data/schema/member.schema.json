@@ -25,7 +25,11 @@
         "type": "object",
         "required": ["id", "axes"],
         "properties": {
-          "id": { "type": "string" },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*_[0-9]+$",
+            "description": "构件实例 ID：类型全拼（小写）+ 下划线 + 序号，如 yanzhu_01；前缀须与 type 字段一致，全拼避免缩写撞名"
+          },
           "axes": {
             "type": "array",
             "minItems": 2,

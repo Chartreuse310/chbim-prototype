@@ -50,8 +50,19 @@ FU / PUZUO / TIAO 的走向尚未定义（V2 再议）。
 构件实例示例（`data/members/yanzhu.json`）：
 
 ```json
-{ "id": "YZ-01", "axes": ["CAO_Fo", "JIAN_L1"] }
+{ "id": "yanzhu_01", "axes": ["CAO_Fo", "JIAN_L1"] }
 ```
+
+## 构件 ID 命名
+
+构件实例 ID 形如 `{类型全拼}_{序号}`，正则 `^[a-z][a-z0-9]*_[0-9]+$`（已固化
+在 `data/schema/member.schema.json`）：
+
+- 前缀 = `type` 字段 = 数据文件名，全拼小写（如 `yanzhu`），**不用缩写**，
+  避免不同构件缩写撞名（缩写 `YZ` 无法区分檐柱/游柱/圆作等）
+- 分隔符统一用下划线，与缝编码 `{KIND}_{SUFFIX}` 语法一致
+- 构件用小写、缝 `KIND` 用大写，正好区分两个命名空间
+- 示例：`yanzhu_01`；将来的 `efang_01`（额枋）、`dougong_01`（斗栱）同规则
 
 D 表达式（`"11D"`、`"2D"`）由 `bridge/resolver.py` 在生成代码前求值为
 mm 数值，OpenSCAD 永远接收纯数字。

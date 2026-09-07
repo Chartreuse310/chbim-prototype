@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+### Changed
+- **构件实例 ID 命名规范**：`{类型全拼小写}_{序号}`（如 `yanzhu_01`），
+  替代缩写式 `YZ-01`，避免缩写撞名；与缝编码统一下划线分隔，
+  ID 前缀 = type 字段 = 数据文件名
+- `member.schema.json`：实例 `id` 由自由字符串改为正则强校验
+  `^[a-z][a-z0-9]*_[0-9]+$`
+
+### Fixed
+- `.gitignore` 补充 `.workbuddy/`、Python 环境缓存、跨平台系统文件、`*.bak`
+
 ## [0.1.0] - 2026-09-07
 
 ### Added
