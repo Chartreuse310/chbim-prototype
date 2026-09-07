@@ -4,6 +4,26 @@
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-09-08
+
+### Added
+- 图纸 PDF 嵌入 FandolFang 长仿宋字体（OTF→TTF 转换 + 子集嵌入，跨平台一致显示；GPL+字体例外许可，可随仓库分发）。替代 STSong-Light CID 非嵌入方案（决策点 D 定案）
+- 需求池新增 G16 构件引文标注层（粒度 / 版权边界 / CSV 导出，MVP 一天量级），并备注未来测试数据来源 ancient-chinese-architecture-wiki（项目未上传）
+
+### Changed
+- 决策点 A 定案：轴线编号双轨存储（缝 `id` + 国标 `gb_no`），导出时选择显示
+- 决策同步审计：DECISIONS.md 补 ADR-0007 与生效决策索引，drawing-standard 决策点 B/C/D 标记定案，PROGRESS 图纸区同步 Phase 1 实况
+- README 示例快照刷新（FandolFang 长仿宋版本）
+
+## [0.3.2] - 2026-09-07
+
+### Changed
+- README 目标读者扩展（研究者 / 古建筑爱好者 / 创作者），users.md 新增用户三（古建筑爱好者/创作者）画像，英文版同步
+- README 示例输出改为等高左右双列布局（table 双列）
+
+### Fixed
+- 全库 Markdown 合并句中软换行（中文语境下软换行会渲染为空格导致断句错乱），并恢复 README 表格多行结构
+
 ## [0.3.1] - 2026-09-07
 
 ### Added
