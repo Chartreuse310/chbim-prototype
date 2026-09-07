@@ -112,6 +112,10 @@
 ## 开放问题（待决策）
 
 1. **pattern 语法**：`yanzhu[CAO_Fo, all JIAN]` 整排紧凑写法如何与 schema 兼容（ADR-0004 开放项）。
+   ~~两条 CAO 平行无交点~~——朝向语义更新（ADR-0007）后 `CAO_Fo × CAO_Ro`
+   即角柱交点，resolver 按 runs 判定已天然支持，无需新代码；剩余难点仅剩
+   pattern 展开的设计问题：枚举谓词（含 except）、ID 自动分配的确定性排序
+   与显式实例冲突规则、schema 增设可选 `patterns` 数组（oneOf）。
 2. **z 向语义**：显式标高字段 vs 构件搭接关系 vs 基准面引用，三选一。
 3. **消隐选型**：Blender Freestyle vs 自实现 vs 接受轮廓图现状。
 4. **DXF 需求确认**：是否已有真实 AutoCAD 用户案例，决定 [P1] 是否提前。
