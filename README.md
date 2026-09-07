@@ -64,6 +64,7 @@ V1 缝编码遵循“基于缝的编码体系”（详见 [docs/coding-system.md
 - [docs/users.md](docs/users.md) —— 用户画像与工作流 / 痛点分析
 - [docs/DECISIONS.md](docs/DECISIONS.md) —— 当前生效的架构决策索引
 - [docs/coding-system.md](docs/coding-system.md) —— 基于缝的编码体系
+- [docs/drawing-standard.md](docs/drawing-standard.md) —— 图纸规范对照（GB/T 50001-2017）与改造策略
 - [docs/adr/](docs/adr/) —— 架构决策记录（不可变）
 - [docs/journal/](docs/journal/) —— 开发日志（成败都记）
 - [CHANGELOG.md](CHANGELOG.md) —— release 变更
