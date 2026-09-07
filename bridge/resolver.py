@@ -15,7 +15,7 @@ from datetime import date
 from pathlib import Path
 
 _EXPR_RE = re.compile(r"^\s*(\d+(?:\.\d+)?)\s*D\s*$")
-_SUFFIX_RE = re.compile(r"^([FBLR]?)(\d*)([ioC]?)$")
+_SUFFIX_RE = re.compile(r"^([FBLR]?)(\d*)([io]?)$")
 
 # 缝类型 → 平面走向：
 #   RUNS_X：沿 X（面阔）延伸、位置定义在 Y（前后）—— 槽缝、槫缝

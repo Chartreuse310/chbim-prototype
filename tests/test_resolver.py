@@ -28,10 +28,11 @@ class TestAxisId(unittest.TestCase):
         self.assertEqual(p["inner_outer"], "o")
 
     def test_jian_center(self):
-        p = resolver.parse_axis_id("JIAN_C")
+        p = resolver.parse_axis_id("JIAN_0")
         self.assertEqual(p["kind"], "JIAN")
         self.assertEqual(p["direction"], None)
-        self.assertEqual(p["inner_outer"], "C")
+        self.assertEqual(p["ordinal"], "0")
+        self.assertEqual(p["inner_outer"], None)
 
     def test_tuan(self):
         p = resolver.parse_axis_id("TUAN_F1")
@@ -49,7 +50,7 @@ class TestResolve(unittest.TestCase):
         self.assertEqual(ax["CAO_Fo"]["coord"], 600)    # 2D = 600
         self.assertEqual(ax["CAO_Ro"]["coord"], -600)
         self.assertEqual(ax["JIAN_L1"]["coord"], -1200) # 4D
-        self.assertEqual(ax["JIAN_C"]["coord"], 0)
+        self.assertEqual(ax["JIAN_0"]["coord"], 0)
         self.assertEqual(ax["TUAN_0"]["coord"], 0)
         self.assertEqual(ax["TUAN_F1"]["coord"], 300)
         self.assertEqual(ax["CAO_Fo"]["runs"], "X")
