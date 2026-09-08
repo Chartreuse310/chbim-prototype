@@ -65,6 +65,26 @@
     </div>
     <div id="status">输入 D 后点击「生成」。</div>
 
+    <h3>按间数生成柱网（G17）</h3>
+    <label>面阔间数 / 进深间数（奇数 ≥3）</label>
+    <div style="display:flex;gap:8px">
+      <input id="mianKuo" type="number" value="5" step="2" min="3" max="21"
+             title="面阔间数（奇数）">
+      <input id="jinShen" type="number" value="3" step="2" min="3" max="11"
+             title="进深间数（奇数）">
+    </div>
+    <label style="margin-top:8px">明间面阔 / 明间进深（D 表达式）</label>
+    <div style="display:flex;gap:8px">
+      <input id="mingKuoW" type="text" value="8D" title="明间面阔，如 8D">
+      <input id="mingShenW" type="text" value="8D" title="明间进深，如 8D">
+    </div>
+    <div style="margin-top:8px">
+      <button id="layout">按间数生成柱网</button>
+    </div>
+    <div id="layout-status" style="font-size:12px;color:var(--muted);margin-top:4px">
+      间宽自明间每向外一间 ×0.8；柱高 = 0.8×明间面阔（见 docs/coding-system.md）
+    </div>
+
     <h3>轴线（缝）</h3>
     <table id="axes-table">
       <thead><tr><th>id</th><th>kind</th><th>距中线</th></tr></thead>
@@ -164,6 +184,51 @@ $("#build").onclick = async () => {
   } catch (e) { err("生成失败：" + e.message); }
   finally { btn.disabled = false; }
 };
+
+// 间数生成柱网（G17）+ 渲染
+$("#layout").onclick = async () => {
+  const body = {
+    D: parseFloat($("#D").value) || undefined,
+    mian_kuo: parseInt($("#mianKuo").value),
+    jin_shen: parseInt($("#jinShen").value),
+    ming_kuo_w: $("#mingKuoW").value.trim() || undefined,
+    ming_shen_w: $("#mingShenW").value.trim() || undefined,
+  };
+  const btn = $("#layout"); btn.disabled = true;
+  const lstat = $("#layout-status");
+  lstat.classList.remove("err"); lstat.style.color = "";
+  lstat.textContent = "生成中（间数 → 缝位 → OpenSCAD，约 3-8 秒）…";
+  try {
+    const r = await fetch("/api/layout", { method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body) });
+    const result = await r.json();
+    if (!r.ok) throw new Error(result.error || r.statusText);
+    renderAxesResolved(result.spec.axes);
+    renderMembersResolved(result.spec.members);
+    renderFiles(result.files);
+    const m = result.layout;
+    status(`已生成 ${m.mian_kuo}间×${m.jin_shen}间 柱网 `
+      + `· ${result.spec.members.length} 根柱 · D=${result.spec.D}mm`);
+    lstat.textContent = `规律：间宽自明间 ×0.8 递减；柱高 = 0.8×明间面阔（${m.ming_kuo_w} → ${result.spec.members[0].height_mm.toFixed(0)}mm）`;
+    loadPreview();
+    load3D();
+  } catch (e) {
+    lstat.textContent = "生成失败：" + e.message;
+    lstat.style.color = "var(--danger)";
+  } finally { btn.disabled = false; }
+};
+
+function renderAxesResolved(axes) {
+  // 生成布局后用 spec.axes（已解析坐标）刷新轴线表
+  const tb = $("#axes-table tbody"); tb.innerHTML = "";
+  for (const a of axes) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td><code>${a.id}</code></td><td>${a.kind}</td>
+      <td>${a.coord.toFixed(0)} mm</td>`;
+    tb.appendChild(tr);
+  }
+}
 
 function renderMembersResolved(members) {
   const tb = $("#members-table tbody"); tb.innerHTML = "";

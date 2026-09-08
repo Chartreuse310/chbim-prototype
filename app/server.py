@@ -69,17 +69,49 @@ class Handler(BaseHTTPRequestHandler):
     # --------------------------------------------------------- POST
 
     def do_POST(self):
-        if urlparse(self.path).path != "/api/build":
-            return self._send(404, {"error": "not found"})
+        path = urlparse(self.path).path
+        if path == "/api/build":
+            return self._handle_build(self._read_body())
+        if path == "/api/layout":
+            return self._handle_layout(self._read_body())
+        return self._send(404, {"error": "not found"})
+
+    def _read_body(self) -> dict:
         length = int(self.headers.get("Content-Length", 0))
         raw = self.rfile.read(length) if length else b"{}"
         try:
-            body = json.loads(raw.decode("utf-8")) if raw else {}
+            return json.loads(raw.decode("utf-8")) if raw else {}
         except json.JSONDecodeError as e:
-            return self._send(400, {"error": f"invalid JSON: {e}"})
+            raise ValueError(f"invalid JSON: {e}") from None
+
+    def _handle_build(self, body: dict):
         D = body.get("D")
         try:
             result = pipeline.build(D=float(D) if D else None)
+        except Exception as e:
+            return self._send(500, {"error": f"{type(e).__name__}: {e}"})
+        return self._send(200, result)
+
+    def _handle_layout(self, body: dict):
+        """间数生成柱网（G17）：body = {mian_kuo, jin_shen, D?,
+        ming_kuo_w?, ming_shen_w?}。生成数据写入 build/generated/
+        后走常规构建管线（不覆盖 data/ 静态示例）。"""
+        try:
+            from bridge import layout
+            mian = int(body.get("mian_kuo", 0))
+            shen = int(body.get("jin_shen", 0))
+            data = layout.generate_layout(
+                mian_kuo=mian, jin_shen=shen,
+                ming_kuo_w=body.get("ming_kuo_w", layout.DEFAULT_MING_W),
+                ming_shen_w=body.get("ming_shen_w", layout.DEFAULT_MING_W))
+            gen_dir = BUILD / "generated"
+            layout.write_layout(data, gen_dir)
+            D = body.get("D")
+            result = pipeline.build(D=float(D) if D else None,
+                                    data_dir=gen_dir)
+            result["layout"] = data["meta"]
+        except ValueError as e:      # 间数/明间宽校验失败 → 4xx
+            return self._send(400, {"error": str(e)})
         except Exception as e:
             return self._send(500, {"error": f"{type(e).__name__}: {e}"})
         return self._send(200, result)
