@@ -6,15 +6,15 @@
 
 Chinese Historic Building Information Modeling — a BIM organization method based on traditional Chinese construction practice. Prototype V1 is an open-source feasibility study aimed at researchers, heritage-architecture enthusiasts, and creators who need to produce traditional-architecture models quickly: [OpenSCAD](https://openscad.org) serves as a scriptable, versionable, reproducible geometry core; axis lines (*seams*) and members are described as JSON data; a Python glue layer converts them into OpenSCAD instance code and automatically exports models and three-view drawings reusable in Blender / Adobe Illustrator / AutoCAD.
 
-> **Current scope**: the *yanzhu* (eave column) only; the Web workbench supports real-time adjustment of the modular diameter D. See [PROGRESS.md](PROGRESS.md) and [docs/DECISIONS.md](docs/DECISIONS.md) for what V1 does and does not cover.
+> **Current scope**: the *yanzhu* (eave column) only; the Web workbench generates the column grid in real time from the modular diameter D and the bay counts along the width (miankuo) and depth (jinshen) — bay widths shrink ×0.8 outward from the central bay, and column height = 0.8 × central-bay width. See [PROGRESS.md](PROGRESS.md) and [docs/DECISIONS.md](docs/DECISIONS.md) for what V1 does and does not cover.
 
-## Example Output (D=300, snapshot of v0.3.0 semantics)
+## Example Output (5 bays × 3 bays, D=300, 24 eave columns)
 
 <table>
   <tr>
     <td align="center">
       <img src="docs/images/sheet-sample.svg" width="339" alt="Three-view drawing sample (SVG)"><br>
-      <sub>Three-view drawing · <code>make build D=300</code> (A4, GB/T 50001-2017 frame &amp; title block)</sub>
+      <sub>Three-view drawing (A4, GB/T 50001-2017 frame &amp; title block, embedded FandolFang font)</sub>
     </td>
     <td align="center">
       <img src="docs/images/preview-sample.png" width="320" alt="3D preview sample (PNG)"><br>
@@ -23,7 +23,15 @@ Chinese Historic Building Information Modeling — a BIM organization method bas
   </tr>
 </table>
 
-Snapshots are refreshed manually via `make snapshot`; `build/` itself is not committed.
+Reproduce (CLI):
+
+```bash
+python -c "from pathlib import Path; from bridge import layout, pipeline; \
+layout.write_layout(layout.generate_layout(5, 3), Path('build/generated')); \
+pipeline.build(D=300, data_dir=Path('build/generated'))"
+```
+
+Or enter the bay counts in the Web workbench (`make serve`) and click Generate. Snapshots are refreshed manually; `build/` itself is not committed.
 
 ---
 

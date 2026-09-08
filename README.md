@@ -6,15 +6,15 @@
 
 Chinese Historic Building Information Modeling——基于中国古代营造体系的 BIM 组织方法 Prototype V1 是一个面向研究者、古建筑爱好者和需要快速制作古建筑模型的创作者的开源可行性验证原型。目标是用 [OpenSCAD](https://openscad.org) 作为脚本化、可版本化、可复现的几何核心，把轴线（缝）与构件用 JSON 数据描述，由 Python 粘合层把它们转成 OpenSCAD 实例代码，并自动导出可在 Blender / Adobe Illustrator / AutoCAD 复用的模型与三视图图纸。
 
-> **当前能力**：仅 yanzhu（檐柱），Web 工作台支持 D 模数即时调整。见 [PROGRESS.md](PROGRESS.md) 与 [docs/DECISIONS.md](docs/DECISIONS.md)了解 V1 已实现与未实现项。
+> **当前能力**：仅 yanzhu（檐柱）；Web 工作台支持 D 模数与面阔/进深间数即时生成柱网（间宽自明间向外 ×0.8 递减，柱高 = 0.8×明间面阔）。见 [PROGRESS.md](PROGRESS.md) 与 [docs/DECISIONS.md](docs/DECISIONS.md)了解 V1 已实现与未实现项。
 
-## 示例输出（D=300，快照于 v0.3.0 语义）
+## 示例输出（面阔 5 间 × 进深 3 间，D=300，24 根檐柱）
 
 <table>
   <tr>
     <td align="center">
       <img src="docs/images/sheet-sample.svg" width="339" alt="三视图图纸示例（SVG）"><br>
-      <sub>三视图图纸 · <code>make build D=300</code>（A4，GB/T 50001-2017 图框/标题栏）</sub>
+      <sub>三视图图纸（A4，GB/T 50001-2017 图框/标题栏，FandolFang 长仿宋嵌入）</sub>
     </td>
     <td align="center">
       <img src="docs/images/preview-sample.png" width="320" alt="3D 预览示例（PNG）"><br>
@@ -23,7 +23,15 @@ Chinese Historic Building Information Modeling——基于中国古代营造体�
   </tr>
 </table>
 
-快照由 `make snapshot` 手动刷新；`build/` 本身不入库。
+复现（CLI）：
+
+```bash
+python -c "from pathlib import Path; from bridge import layout, pipeline; \
+layout.write_layout(layout.generate_layout(5, 3), Path('build/generated')); \
+pipeline.build(D=300, data_dir=Path('build/generated'))"
+```
+
+或直接在 Web 工作台（`make serve`）中输入间数点「生成」。快照手动刷新；`build/` 本身不入库。
 
 ---
 
