@@ -15,6 +15,17 @@ from sheet import compose, views
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _obj_via_trimesh(stl: Path, obj: Path) -> Path | None:
+    """STL → OBJ 兜底转换（旧版 OpenSCAD 无 .obj 导出时使用）。"""
+    try:
+        import trimesh
+    except ImportError:
+        return None
+    mesh = trimesh.load(stl)
+    mesh.export(obj)
+    return obj if obj.exists() and obj.stat().st_size > 200 else None
+
+
 def build(D: float | None = None, data_dir: Path | None = None,
           build_dir: Path | None = None) -> dict:
     data_dir = Path(data_dir) if data_dir else ROOT / "data"
@@ -30,7 +41,16 @@ def build(D: float | None = None, data_dir: Path | None = None,
     # 3. 3D 模型导出（STL / OBJ → Blender）
     files: dict[str, Path] = {}
     files["stl"] = openscad.export(build_dir / "model.scad", build_dir / "model.stl")
-    files["obj"] = openscad.export(build_dir / "model.scad", build_dir / "model.obj")
+    try:
+        files["obj"] = openscad.export(build_dir / "model.scad", build_dir / "model.obj")
+    except RuntimeError as e:
+        # OpenSCAD < 2026.06 不支持 .obj 后缀导出（如 Ubuntu apt 版 2021.01）——
+        # 兜底：trimesh 从 STL 转换；无 trimesh 则跳过 OBJ（STL 已可进 Blender）
+        obj = _obj_via_trimesh(build_dir / "model.stl", build_dir / "model.obj")
+        if obj:
+            files["obj"] = obj
+        else:
+            print(f"  [warn] OBJ 导出已跳过（OpenSCAD 版本过旧且无 trimesh）：{e}")
 
     # 4. 三视图投影（SVG 轮廓 → 解析为多边形）
     polys = {}

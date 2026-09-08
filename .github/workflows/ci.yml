@@ -2,6 +2,7 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
 
 jobs:
@@ -13,10 +14,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: 安装 OpenSCAD 与 reportlab
+      - name: 安装 OpenSCAD 与 Python 依赖
+        # openscad: 几何核心 CLI；reportlab: PDF 图纸；fontTools: SVG 字体子集嵌入；
+        # trimesh: OBJ 兜底转换（apt 的 OpenSCAD 2021.01 不支持 .obj 导出）
         run: |
           sudo apt-get update
           sudo apt-get install -y openscad
-          pip install reportlab
+          pip install reportlab fontTools trimesh
       - name: 运行冒烟测试
         run: python -m unittest discover -s tests -v
