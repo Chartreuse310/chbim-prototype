@@ -29,6 +29,10 @@
   th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--border); }
   th { color: var(--muted); font-weight: 500; }
   h3 { font-size: 13px; font-weight: 500; margin: 16px 0 8px; color: var(--muted); }
+  h3.preview-head { display: flex; justify-content: space-between; align-items: center; }
+  .btn-mini { background: var(--accent-soft); color: var(--accent); padding: 3px 12px;
+              font-size: 12px; border-radius: 12px; }
+  .btn-mini:hover:not(:disabled) { background: #d3e1f3; filter: none; }
   #status { font-size: 12px; color: var(--muted); margin: 8px 0; min-height: 18px; }
   #status.err { color: var(--danger); }
   .preview-box { background: #fff; border: 1px solid var(--border); border-radius: 8px;
@@ -76,7 +80,7 @@
 
   <section class="viewer">
     <div class="preview-box">
-      <h3>3D 预览</h3>
+      <h3 class="preview-head">3D 预览 <button id="reset-view" class="btn-mini">回正视角</button></h3>
       <div id="canvas3d"></div>
       <img id="preview" alt="OpenSCAD 渲染" style="display:none">
     </div>
@@ -192,7 +196,7 @@ function loadPreview() {
   sh.src = "/files/sheet.svg?t=" + Date.now();
 }
 
-let scene, camera, renderer, controls;
+let scene, camera, renderer, controls, defaultView;
 async function load3D() {
   const canvasBox = $("#canvas3d");
   try {
@@ -213,20 +217,29 @@ async function load3D() {
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
     const dir = new THREE.DirectionalLight(0xffffff, 0.8);
     dir.position.set(5000, -5000, 5000); scene.add(dir);
-    const grid = new THREE.GridHelper(8000, 16, 0xcccccc, 0xe5e7eb);
-    grid.position.z = -1; scene.add(grid);
+    // 网格尺寸在 loader 回调内按模型实际尺寸生成（先放占位，后面替换）
+    let grid = new THREE.GridHelper(4000, 16, 0xcccccc, 0xe5e7eb);
+    grid.position.y = -0.5; scene.add(grid);
     const loader = new STLLoader();
     loader.load("/files/model.stl?t=" + Date.now(), (geo) => {
+      geo.rotateX(-Math.PI / 2);   // OpenSCAD Z-up → three.js Y-up（柱子冲上）
       geo.center();
       geo.computeBoundingBox();
+      const box = geo.boundingBox;
+      geo.translate(0, -box.min.y, 0);   // 柱底贴地，网格在脚下
+      const h = box.max.y - box.min.y;  // 建筑总高
       const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial(
         { color: 0x185fa5, metalness: 0.05, roughness: 0.7 }));
       scene.add(mesh);
-      const box = geo.boundingBox;
-      const r = Math.max(
-        box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z);
-      camera.position.set(r * 1.2, -r * 1.2, r * 0.8);
-      controls.target.set(0, 0, (box.max.z + box.min.z) / 2); controls.update();
+      // 重建合适大小的网格（1.6× 模型最大平面尺寸）
+      const planMax = Math.max(box.max.x - box.min.x, box.max.z - box.min.z);
+      scene.remove(grid);
+      grid = new THREE.GridHelper(planMax * 1.6, 16, 0xcccccc, 0xe5e7eb);
+      grid.position.y = -0.5; scene.add(grid);
+      const r = Math.max(planMax, h);
+      defaultView = { pos: [r * 0.9, r * 1.3, r * 0.9], target: [0, h * 0.25, 0] };
+      camera.position.set(...defaultView.pos);
+      controls.target.set(...defaultView.target); controls.update();
     });
     (function tick() { requestAnimationFrame(tick); renderer.render(scene, camera); })();
   } catch (e) {
@@ -234,6 +247,14 @@ async function load3D() {
       + "three.js 加载失败（" + e.message + "），已显示下方 OpenSCAD 渲染图作为兜底。</div>";
   }
 }
+
+function resetView() {
+  if (!defaultView || !camera || !controls) return;
+  camera.position.set(...defaultView.pos);
+  controls.target.set(...defaultView.target);
+  controls.update();
+}
+$("#reset-view").onclick = resetView;
 
 loadData();
 </script>
