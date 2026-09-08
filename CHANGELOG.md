@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.3.4] - 2026-09-08
+
 ### Added
 - 图纸 SVG 嵌入 FandolFang 长仿宋字体子集（fontTools + woff2，base64 `@font-face` data URI）：Web 工作台与离线打开 `sheet.svg` 都用同一仿宋字形，不再依赖系统字体；子集仅含图纸实际用到的字（含 ASCII + ~60 个 CJK），sheet.svg 体积 14 KB → 40 KB
 - `Makefile` 默认 `PY` 指向 managed venv（`envs/default`，含 reportlab + fontTools），`make build/serve/snapshot/test` 直接可用，可 `PY=...` 覆盖
