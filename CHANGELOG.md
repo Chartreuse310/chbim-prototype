@@ -5,7 +5,7 @@
 ## [Unreleased]
 
 ### Added
-- 间数生成柱网（G17）：输入「面阔 X 间，进深 Y 间」自动生成柱网——X 间 = X+1 柱/排，仅支持奇数间（明间基准）；间宽自明间每向外一间 ×0.8（次间 0.8W、梢间 0.64W…）；柱高全柱等高 = 0.8×明间面阔；缝命名 JIAN_L1..Ln/R1..Rn（自明间向外）+ CAO 内圈 F1..Fn/B1..Bn、外圈 Fo/Bo（檐槽/金槽区分）。规律记录于 docs/coding-system.md；运算层 `bridge/layout.py`；交互 `POST /api/layout` + 工作台「按间数生成柱网」表单（生成数据写 `build/generated/`，不覆盖 `data/` 静态示例）；生成后轴线表联动刷新为解析坐标。新增 tests/test_layout.py（15 例）
+- 间数生成柱网（G17）：输入「面阔 X 间，进深 Y 间」自动生成柱网——X 间 = X+1 柱/排，仅支持奇数间（明间基准）；间宽自明间每向外一间 ×0.8（次间 0.8W、梢间 0.64W…）；柱高全柱等高 = 0.8×明间面阔；缝命名 JIAN_L1..Ln/R1..Rn（自明间向外）+ CAO 内圈 F1..Fn/B1..Bn、外圈 Fo/Bo（檐槽/金槽区分）。规律记录于 docs/coding-system.md；运算层 `bridge/layout.py`；交互 `POST /api/layout`。工作台改为单一「生成」入口：D + 面阔/进深间数 + 明间面阔/进深一次提交（原「生成模型与图纸」读取静态示例的路径由 `/api/build` 保留供 API/测试，UI 不再使用）；生成数据写 `build/generated/`，不覆盖 `data/` 静态示例；生成后轴线表联动刷新为解析坐标。新增 tests/test_layout.py（15 例）
 
 ## [0.3.4] - 2026-09-08
 

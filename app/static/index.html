@@ -60,13 +60,7 @@
   <aside>
     <label>整体模数 D（柱径，mm）</label>
     <input id="D" type="number" value="300" step="10" min="50" max="2000">
-    <div style="margin-top:12px">
-      <button id="build">生成模型与图纸</button>
-    </div>
-    <div id="status">输入 D 后点击「生成」。</div>
-
-    <h3>按间数生成柱网（G17）</h3>
-    <label>面阔间数 / 进深间数（奇数 ≥3）</label>
+    <label style="margin-top:8px">面阔间数 / 进深间数（奇数 ≥3）</label>
     <div style="display:flex;gap:8px">
       <input id="mianKuo" type="number" value="5" step="2" min="3" max="21"
              title="面阔间数（奇数）">
@@ -78,12 +72,10 @@
       <input id="mingKuoW" type="text" value="8D" title="明间面阔，如 8D">
       <input id="mingShenW" type="text" value="8D" title="明间进深，如 8D">
     </div>
-    <div style="margin-top:8px">
-      <button id="layout">按间数生成柱网</button>
+    <div style="margin-top:12px">
+      <button id="build">生成</button>
     </div>
-    <div id="layout-status" style="font-size:12px;color:var(--muted);margin-top:4px">
-      间宽自明间每向外一间 ×0.8；柱高 = 0.8×明间面阔（见 docs/coding-system.md）
-    </div>
+    <div id="status">点击「生成」——间宽自明间每向外一间 ×0.8；柱高 = 0.8×明间面阔（docs/coding-system.md G17）。</div>
 
     <h3>轴线（缝）</h3>
     <table id="axes-table">
@@ -164,59 +156,33 @@ function renderMembers(types) {
   }
 }
 
-// 生成 + 渲染
+// 生成（统一入口）：D + 面阔/进深间数 + 明间宽 → /api/layout → 全套产物
 $("#build").onclick = async () => {
-  const D = parseFloat($("#D").value);
-  if (!D || D <= 0) return err("请输入有效的 D 值");
+  const mian = parseInt($("#mianKuo").value);
+  const shen = parseInt($("#jinShen").value);
+  if (!mian || !shen) return err("请输入面阔与进深间数");
   const btn = $("#build"); btn.disabled = true;
-  status("生成中（OpenSCAD 6 次调用，约 3-8 秒）…");
-  try {
-    const r = await fetch("/api/build", { method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ D }) });
-    if (!r.ok) { const e = await r.json(); throw new Error(e.error || r.statusText); }
-    const result = await r.json();
-    renderMembersResolved(result.spec.members);
-    renderFiles(result.files);
-    status(`已生成 ${result.spec.members.length} 根柱 · D=${D}mm`);
-    loadPreview();
-    load3D();
-  } catch (e) { err("生成失败：" + e.message); }
-  finally { btn.disabled = false; }
-};
-
-// 间数生成柱网（G17）+ 渲染
-$("#layout").onclick = async () => {
-  const body = {
-    D: parseFloat($("#D").value) || undefined,
-    mian_kuo: parseInt($("#mianKuo").value),
-    jin_shen: parseInt($("#jinShen").value),
-    ming_kuo_w: $("#mingKuoW").value.trim() || undefined,
-    ming_shen_w: $("#mingShenW").value.trim() || undefined,
-  };
-  const btn = $("#layout"); btn.disabled = true;
-  const lstat = $("#layout-status");
-  lstat.classList.remove("err"); lstat.style.color = "";
-  lstat.textContent = "生成中（间数 → 缝位 → OpenSCAD，约 3-8 秒）…";
+  status("生成中（间数 → 缝位 → OpenSCAD 6 次调用，约 3-8 秒）…");
   try {
     const r = await fetch("/api/layout", { method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body) });
+      body: JSON.stringify({
+        D: parseFloat($("#D").value) || undefined,
+        mian_kuo: mian, jin_shen: shen,
+        ming_kuo_w: $("#mingKuoW").value.trim() || undefined,
+        ming_shen_w: $("#mingShenW").value.trim() || undefined,
+      }) });
     const result = await r.json();
     if (!r.ok) throw new Error(result.error || r.statusText);
     renderAxesResolved(result.spec.axes);
     renderMembersResolved(result.spec.members);
     renderFiles(result.files);
-    const m = result.layout;
-    status(`已生成 ${m.mian_kuo}间×${m.jin_shen}间 柱网 `
-      + `· ${result.spec.members.length} 根柱 · D=${result.spec.D}mm`);
-    lstat.textContent = `规律：间宽自明间 ×0.8 递减；柱高 = 0.8×明间面阔（${m.ming_kuo_w} → ${result.spec.members[0].height_mm.toFixed(0)}mm）`;
+    status(`已生成 ${mian}间×${shen}间 柱网 · ${result.spec.members.length} 根柱`
+      + ` · D=${result.spec.D}mm · 柱高 ${result.spec.members[0].height_mm.toFixed(0)}mm`);
     loadPreview();
     load3D();
-  } catch (e) {
-    lstat.textContent = "生成失败：" + e.message;
-    lstat.style.color = "var(--danger)";
-  } finally { btn.disabled = false; }
+  } catch (e) { err("生成失败：" + e.message); }
+  finally { btn.disabled = false; }
 };
 
 function renderAxesResolved(axes) {
