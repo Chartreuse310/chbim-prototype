@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Fixed
+- **CI 冒烟测试兼容旧版 OpenSCAD**（ubuntu-latest apt 版为 2021.01）：OBJ 导出失败时用 trimesh 从 STL 兜底转换（无 trimesh 则跳过并警告）；离屏 PNG 预览失败时警告并跳过（非关键产物）。CI workflow 补装 fontTools/trimesh，触发条件加 `tags: ['v*']`
+
 ## [0.3.5] - 2026-09-08
 
 ### Added
