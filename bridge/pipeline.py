@@ -64,14 +64,18 @@ def build(D: float | None = None, data_dir: Path | None = None,
     files["pdf"] = build_dir / "sheet.pdf"
     compose.compose_sheet(spec, polys, files["svg"], files["pdf"])
 
-    # 6. 预览渲染
+    # 6. 预览渲染（非关键产物：无 GPU/显示环境的老版 OpenSCAD 离屏 PNG 会失败，
+    #    Web UI 也不再使用静态预览图——失败时跳过并警告）
     bb = spec["bbox"]
     ext = max(bb["xmax"] - bb["xmin"], bb["ymax"] - bb["ymin"], 1.0)
     eye = (ext * 1.5, -ext * 1.5, bb["zmax"] * 1.1 + ext * 0.4)
     center = ((bb["xmin"] + bb["xmax"]) / 2, (bb["ymin"] + bb["ymax"]) / 2,
               bb["zmax"] * 0.45)
-    files["preview"] = openscad.render_png(
-        build_dir / "model.scad", build_dir / "preview.png", eye=eye, center=center)
+    try:
+        files["preview"] = openscad.render_png(
+            build_dir / "model.scad", build_dir / "preview.png", eye=eye, center=center)
+    except Exception as e:
+        print(f"  [warn] 预览 PNG 已跳过（离屏渲染不可用）：{e}")
 
     # 7. 规格存档（供交互层与测试使用）
     files["spec"] = build_dir / "model_spec.json"
