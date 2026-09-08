@@ -198,21 +198,62 @@ def _poly_bbox(polys: list) -> tuple | None:
 
 # ---------------------------------------------------------------- SVG 渲染
 
-_SVG_FONT = "Songti SC,Songti TC,Noto Serif SC,serif"
+_SVG_FONT = "FandolFang, STFangsong, FangSong, Songti SC, Songti TC, Noto Serif SC, serif"
 
 
 def _esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+def _svg_font_defs(text_chars: str) -> str:
+    """把 FandolFang 子集到 text_chars 并以 base64 嵌入 SVG <defs>。
+    SVG 经 <img> 加载时无法引用外部资源，只能 data: URI；内嵌后保证浏览器/离线
+    打开 sheet.svg 都用长仿宋。缺 fontTools/字体文件时返回空串，回退 _SVG_FONT 栈。"""
+    try:
+        from io import BytesIO
+        import base64
+        from fontTools.subset import Subsetter, Options
+        from fontTools.ttLib import TTFont
+    except Exception:
+        return ""
+    src = Path(__file__).resolve().parent.parent / "assets" / "fonts" / "FandolFang-Regular.ttf"
+    if not src.is_file() or not text_chars:
+        return ""
+    try:
+        font = TTFont(str(src))
+        opts = Options()
+        opts.flavor = "woff2"  # 浏览器原生支持，体积约 TTF 的 1/3
+        opts.layout_features = []  # 关 OTF 特性，缩小
+        opts.name_IDs = []  # 不重命名表，缩小
+        opts.notdef_outline = True
+        subsetter = Subsetter(options=opts)
+        subsetter.populate(text=text_chars)
+        subsetter.subset(font)
+        buf = BytesIO()
+        font.save(buf)
+        b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+        return (f'<defs><style type="text/css">@font-face{{'
+                f'font-family:"FandolFang";'
+                f'src:url(data:font/woff2;base64,{b64}) format("woff2");'
+                f'font-weight:normal;font-style:normal;'
+                f'}}</style></defs>')
+    except Exception:
+        return ""
+
+
 def _render_svg(prims: list, path: Path) -> None:
     fy = lambda v: PAGE_H - v  # noqa: E731
+    # 先扫一遍收集所有文字 → 子集字体（确保每个用到的字都有字形）
+    chars = "".join(p[4] for p in prims if p[0] == "text")
+    defs = _svg_font_defs(chars)
     out = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{PAGE_W:g}mm" '
         f'height="{PAGE_H:g}mm" viewBox="0 0 {PAGE_W:g} {PAGE_H:g}">',
         "<title>CHBIM 三视图图纸</title>",
     ]
+    if defs:
+        out.append(defs)
     for p in prims:
         k = p[0]
         if k == "poly":

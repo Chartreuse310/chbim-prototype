@@ -6,8 +6,11 @@
 #   make test           跑全部测试
 #   make snapshot       将当前 build/ 示例产物快照到 docs/images/（README 展示用）
 #   make clean          清理 build/
+#
+# 依赖 reportlab（PDF 图纸）与 fontTools（SVG 字体子集嵌入）。默认 PY 指向
+# managed venv（含上述依赖），可 PY=/path/to/your/python 覆盖。
 
-PY ?= python3
+PY ?= /Users/z/.workbuddy/binaries/python/envs/default/bin/python3
 D  ?= 300
 PORT ?= 8765
 

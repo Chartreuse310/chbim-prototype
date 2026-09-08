@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+### Added
+- 图纸 SVG 嵌入 FandolFang 长仿宋字体子集（fontTools + woff2，base64 `@font-face` data URI）：Web 工作台与离线打开 `sheet.svg` 都用同一仿宋字形，不再依赖系统字体；子集仅含图纸实际用到的字（含 ASCII + ~60 个 CJK），sheet.svg 体积 14 KB → 40 KB
+- `Makefile` 默认 `PY` 指向 managed venv（`envs/default`，含 reportlab + fontTools），`make build/serve/snapshot/test` 直接可用，可 `PY=...` 覆盖
+
+### Fixed
+- Web 工作台图纸不应用 FandolFang：旧版仅 PDF 嵌入字体，SVG 路径字体栈 `Songti SC,...,serif` 在多数环境回落无衬线
+- 8765 端口上的工作台进程是用早期代码启动的（运行 31h+），导致 Web UI 看到的图纸是 v0.3.0 之前的旧朝向；重启用当前代码后平面图按坐北朝南排布（CAO_Bo 北在上、CAO_Fo 南在下）
+
 ## [0.3.3] - 2026-09-08
 
 ### Added
