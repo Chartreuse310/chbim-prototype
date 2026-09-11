@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.3.6] - 2026-09-11
+
 ### Added
 - 测试扩充 26 → 52 例：新增 `tests/test_codegen.py`（构件与轴线逐实例生成、`core/` 相对路径引用、入口与三视图文件集）与 `tests/test_sheet.py`（图框/图名/标题栏/线宽图元断言、SVG 为合法 XML 且 A4 横式、PDF 文件头、OpenSCAD SVG 解析含 y 翻转）；`tests/test_smoke.py` 由「产物存在即通过」升级为格式与内容断言（STL ASCII solid、OBJ 顶点行、图纸 SVG 含三视图名与图号、PDF/PNG 文件头），并改为单次构建共享
 
@@ -23,6 +25,8 @@
 - 工作台错误分级统一为 `_send_error`：`ValueError`（输入 / 校验失败）→ 400，其余 → 500 并写服务端 stderr 日志（原先一律静默 500，服务端无任何线索）
 - 前端「生成」提交前校验整体模数 D 必填，配合 T1 的 fail-fast 语义（数据层不再暗含 300）
 - README 中英版依赖说明补 `fontTools`（SVG 字体子集嵌入所需；原先仅列 reportlab，照做会让 SVG 静默回退系统字体栈）
+- README 致谢新增 DeepSeek 大模型
+- `PROGRESS.md` 新增技术债 T 系列登记（T1-T5 状态追踪），G12「在线编辑」标注前置依赖 T3（innerHTML 注入面加固）
 
 ## [0.3.5] - 2026-09-08
 
