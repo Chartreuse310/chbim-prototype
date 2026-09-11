@@ -100,7 +100,7 @@
 
 💡 CITATION.cff / DOI（Zenodo 归档）：学术引用入口（G11）。
 
-💡 Web 工作台数据编辑：在线增删构件与缝（当前仅 D 可交互）（G12）。
+💡 Web 工作台数据编辑：在线增删构件与缝（当前仅 D 可交互）（G12）。**前置依赖 T3（XSS 加固）**——G12 落地前必须先完成，否则在线数据直插 DOM 即成注入面。
 
 💡 Windows 平台验证：当前仅 macOS 开发验证 + Linux CI（G13）。
 
@@ -115,6 +115,15 @@
 5. **首扩展构件**：内柱/金柱（复用圆柱，零前置）vs 枋/槫（需先完成 z 向 + 朝向）——影响 V1 收尾路径。
 6. **单位换算语义**（G14 前置决策）：项目级唯一单位 + 全局比例（推荐，简单可复现）vs 允许字段级混用单位；比例变更默认「重定标」已与用户确认，但历史版本（旧比例的项目文件打开行为）仍需约定。
 7. **缝命名统一**（G17 遗留）：生成布局中 JIAN 外圈为 `Ln/Rn`（无 o）、CAO 外圈为 `Fo/Bo`；静态示例为偶数间（有 `JIAN_0`）。两套命名是否统一（如 JIAN 外圈也加 o、静态示例重编）待定。
+
+## 技术债（T 系列）
+
+1. **T1 · write_layout 硬编码 D_mm=300**（`bridge/layout.py`，[P1] 半小时内）：`write_layout` 把 `"D_mm": 300` 写死，丢掉生成时的真实 D——现靠调用方（server/test）显式传 D 才正确，语义脆弱。修法：`write_layout(data, out_dir, D_mm=None)` 显式传参（缺省写 `null`），`resolve_data` 对「数据层与调用参数均无 D」给明确 ValueError（当前会是丑陋的 TypeError）；server 从请求 D 透传。
+2. **T2 · 几何/图纸回归零覆盖**（[P0] 约半天）：26 个测试中 15 个测 layout，`codegen.py` 与 `sheet/compose.py` 零覆盖，`test_smoke` 仅断言「文件存在且 >200 字节」——几何/图纸回归全靠肉眼。分三步：
+   - codegen：生成 .scad 的 `yanzhu(...)` 调用数 = 实例数，D/H 数值、坐标替换正确
+   - compose：prims → SVG/PDF 含图框、标题栏字段（图名/图号/比例/日期/版本）、字体栈、轴线点画线 dash
+   - smoke 加数值断言：24 柱坐标集合、bbox、柱高；SVG 大小含字体子集特征
+3. **T3 · Web UI innerHTML 注入面**（`app/static/index.html`，[P2] 随 G12 强制）：表格渲染全用 innerHTML 拼数据。当前数据源为本地生成 + 自有 API，无威胁模型；但 G12「在线编辑」落地即成 XSS 面。修法（G12 前置）：表格改 `textContent` / `createElement`，或统一 `esc()` 工具 + 插值点全替换。
 
 ## 版本策略
 
