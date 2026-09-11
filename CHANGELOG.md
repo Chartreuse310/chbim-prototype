@@ -7,11 +7,22 @@
 ### Added
 - 测试扩充 26 → 52 例：新增 `tests/test_codegen.py`（构件与轴线逐实例生成、`core/` 相对路径引用、入口与三视图文件集）与 `tests/test_sheet.py`（图框/图名/标题栏/线宽图元断言、SVG 为合法 XML 且 A4 横式、PDF 文件头、OpenSCAD SVG 解析含 y 翻转）；`tests/test_smoke.py` 由「产物存在即通过」升级为格式与内容断言（STL ASCII solid、OBJ 顶点行、图纸 SVG 含三视图名与图号、PDF/PNG 文件头），并改为单次构建共享
 
+- 测试 52 → 63 例：新增 `tests/test_server.py`（8 例，后台线程起真实 `ThreadingHTTPServer` 走完整 HTTP 栈）覆盖端点契约、D 透传、错误分级（偶数间 / 缺 D / 畸形 JSON → 400）、404 与路径穿越防御
+
 ### Fixed
+- **`/api/layout` 真实请求必然 500**（T1 修复引入的回归）：`_handle_layout` 在 `write_layout` 处引用了下一行才赋值的局部变量 `D`，`UnboundLocalError` 被兜底 `except` 转成 500，Web 工作台「生成」按钮 100% 失效——而 55 例业务测试全绿，因 HTTP 层缺回归网。现改为先取值再落盘与构建，并补 `test_server.py`
+- **`core/lib/units.scad` 的 `FN` 是死常量**：该文件从未被任何 `.scad` 引用，`column.scad` 另写默认值 `fn = 64`，改 `FN` 对几何零影响（与 `docs/users.md` 记录的「`FN` 参数已有」不符）。`column.scad` 改为 `include <../lib/units.scad>` + `fn = FN`；对照实验 `FN=64 → 252` 三角面、`FN=8 → 28` 三角面
+- **`do_POST` 畸形 JSON 冒成 500**：请求体解析失败改由 `do_POST` 捕获并返回 400
+- **失败请求写坏 `build/generated/`**：缺 D 的校验提前到落盘之前，非法请求不再产生副作用
 - **`write_layout` 隐含 D_mm=300（T1）**：改为显式 `D_mm` 参数（缺省写 `null`，语义上 D 属于调用方输入）；`resolve_data` 对「调用参数与数据层均无 D」抛明确 ValueError（原为 `TypeError: float(None)`）；`/api/layout` 从请求 D 透传。新增 3 例 D 语义测试（52 → 55 例）
 - **`Makefile` 解释器路径硬编码**：`PY` 由写死的本机绝对路径改为默认 `python3`，本机自定义解释器/虚拟环境写入 `Makefile.local`（已 gitignore）。外部研究者 clone 后 `make build/serve/test` 开箱可用——原写法会让 README「快速开始」第一步直接失败
 - **`app/server.py` 启动横幅死代码**：删除 `if False` 恒假的 OpenSCAD 探测表达式，改为真实调用 `openscad.find_binary()`，缺失时打印警告（不必等到点「生成」才发现）
 - **CI 冒烟测试兼容旧版 OpenSCAD**（ubuntu-latest apt 版为 2021.01）：OBJ 导出失败时用 trimesh 从 STL 兜底转换（无 trimesh 则跳过并警告）；离屏 PNG 预览失败时警告并跳过（非关键产物）。CI workflow 补装 fontTools/trimesh，触发条件加 `tags: ['v*']`
+
+### Changed
+- 工作台错误分级统一为 `_send_error`：`ValueError`（输入 / 校验失败）→ 400，其余 → 500 并写服务端 stderr 日志（原先一律静默 500，服务端无任何线索）
+- 前端「生成」提交前校验整体模数 D 必填，配合 T1 的 fail-fast 语义（数据层不再暗含 300）
+- README 中英版依赖说明补 `fontTools`（SVG 字体子集嵌入所需；原先仅列 reportlab，照做会让 SVG 静默回退系统字体栈）
 
 ## [0.3.5] - 2026-09-08
 

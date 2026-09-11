@@ -59,12 +59,12 @@ docs/    ADR / journal / 编码体系
 依赖：
 
 - OpenSCAD ≥ 2021.01（开发验证于 2026.06.12，macOS）
-- Python 3.10+ 与 `reportlab`（`pip install reportlab`）
+- Python 3.10+ 与 `reportlab`（PDF 图纸）、`fontTools`（SVG 字体子集嵌入）
 
 ```bash
 git clone <repo>
 cd chbim-prototype
-pip install reportlab
+pip install reportlab fontTools
 make build D=300    # 生成 build/ 下的 stl/obj/svg/pdf/preview
 make serve          # 启动 Web 工作台：http://127.0.0.1:8765
 make test           # 运行冒烟测试

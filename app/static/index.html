@@ -166,14 +166,16 @@ function renderMembers(types) {
 $("#build").onclick = async () => {
   const mian = parseInt($("#mianKuo").value);
   const shen = parseInt($("#jinShen").value);
+  const D = parseFloat($("#D").value);
   if (!mian || !shen) return err("请输入面阔与进深间数");
+  if (!D) return err("请输入整体模数 D（柱径，mm）");
   const btn = $("#build"); btn.disabled = true;
   status("生成中（间数 → 缝位 → OpenSCAD 6 次调用，约 3-8 秒）…");
   try {
     const r = await fetch("/api/layout", { method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        D: parseFloat($("#D").value) || undefined,
+        D,
         mian_kuo: mian, jin_shen: shen,
         ming_kuo_w: $("#mingKuoW").value.trim() || undefined,
         ming_shen_w: $("#mingShenW").value.trim() || undefined,

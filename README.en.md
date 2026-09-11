@@ -59,12 +59,12 @@ docs/    ADR / journal / coding system
 Requirements:
 
 - OpenSCAD ≥ 2021.01 (development verified on 2026.06.12, macOS)
-- Python 3.10+ with `reportlab` (`pip install reportlab`)
+- Python 3.10+ with `reportlab` (PDF sheets) and `fontTools` (SVG font subsetting)
 
 ```bash
 git clone <repo>
 cd chbim-prototype
-pip install reportlab
+pip install reportlab fontTools
 make build D=300    # generates stl/obj/svg/pdf/preview under build/
 make serve          # Web workbench: http://127.0.0.1:8765
 make test           # run smoke tests

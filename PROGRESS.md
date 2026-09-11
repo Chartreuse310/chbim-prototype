@@ -121,6 +121,8 @@
 1. **T1 · write_layout 硬编码 D_mm=300** ✅ 已修复：`write_layout(data, out_dir, D_mm=None)` 显式传参（缺省写 `null`），`resolve_data` 对「数据层与调用参数均无 D」抛明确 ValueError（原为 TypeError）；server 从请求 D 透传；新增 3 例 D 语义测试
 2. **T2 · 几何/图纸回归零覆盖** ✅ 已修复（da34e95，测试 26→52 例）：`tests/test_codegen.py`（构件/轴线逐实例生成、core/ 相对路径、入口与三视图文件集）+ `tests/test_sheet.py`（图框/图名/标题栏/线宽图元、SVG 合法 XML、PDF 文件头、解析 y 翻转）+ smoke 升级为格式与内容断言（STL solid、OBJ 顶点、图纸含视图名/图号、文件头）
 3. **T3 · Web UI innerHTML 注入面**（`app/static/index.html`，[P2] 随 G12 强制）：表格渲染全用 innerHTML 拼数据。当前数据源为本地生成 + 自有 API，无威胁模型；但 G12「在线编辑」落地即成 XSS 面。修法（G12 前置）：表格改 `textContent` / `createElement`，或统一 `esc()` 工具 + 插值点全替换。
+4. **T4 · Web 服务层零测试** ✅ 已修复（本次，测试 52→63 例）：新增 `tests/test_server.py`（8 例，后台线程起真实 `ThreadingHTTPServer` 走完整 HTTP 栈）：端点契约、D 透传、错误分级（偶数间 / 缺 D / 畸形 JSON → 400）、404、路径穿越防御。**起因**：`46baba2` 的 T1 修复在 `_handle_layout` 中引用了尚未赋值的局部变量 `D`，`/api/layout` 真实请求 100% 返回 500（工作台「生成」全失效），而 55 例业务测试全绿——HTTP 层当时无回归网。顺带修：`do_POST` 畸形 JSON 不再冒成 500；缺 D 在落盘前校验（失败请求不写坏 `build/generated/`）；错误分级统一 `_send_error` + 500 留服务端日志
+5. **T5 · `core/lib/units.scad` 的 `FN` 未被引用** ✅ 已修复：该文件从未被任何 `.scad` 引用，`FN = 64` 是死常量，`column.scad` 另写默认值 `fn = 64`——改 `FN` 对几何零影响，而 `docs/users.md` 声称「`FN` 参数已有」。`column.scad` 改为 `include <../lib/units.scad>` + `fn = FN`；对照实验验证（`FN=64` → 252 三角面，`FN=8` → 28 三角面）。顺带 README 中英补 `fontTools` 依赖
 
 ## 版本策略
 
