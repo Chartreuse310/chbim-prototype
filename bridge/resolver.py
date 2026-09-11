@@ -118,7 +118,12 @@ def resolve(data_dir: Path, D: float | None = None) -> dict:
 
 def resolve_data(data: dict, D: float | None = None) -> dict:
     """直接接受 load_data 返回的 dict，跳过文件读取（便于测试与编程调用）。"""
-    D_mm = float(D) if D else float(data["default_D"])
+    D_mm = float(D) if D else data.get("default_D")
+    if not D_mm:
+        raise ValueError(
+            "未提供 D：调用参数 D 与数据层 module.D_mm 均为空。"
+            "生成布局请在 write_layout(D_mm=...) 写入或在 resolve(D=...) 显式给出")
+    D_mm = float(D_mm)
     axes = [resolve_axis(a, D_mm) for a in data["axes"]]
     axes_by_id = {a["id"]: a for a in axes}
 

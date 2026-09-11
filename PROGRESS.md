@@ -118,11 +118,8 @@
 
 ## 技术债（T 系列）
 
-1. **T1 · write_layout 硬编码 D_mm=300**（`bridge/layout.py`，[P1] 半小时内）：`write_layout` 把 `"D_mm": 300` 写死，丢掉生成时的真实 D——现靠调用方（server/test）显式传 D 才正确，语义脆弱。修法：`write_layout(data, out_dir, D_mm=None)` 显式传参（缺省写 `null`），`resolve_data` 对「数据层与调用参数均无 D」给明确 ValueError（当前会是丑陋的 TypeError）；server 从请求 D 透传。
-2. **T2 · 几何/图纸回归零覆盖**（[P0] 约半天）：26 个测试中 15 个测 layout，`codegen.py` 与 `sheet/compose.py` 零覆盖，`test_smoke` 仅断言「文件存在且 >200 字节」——几何/图纸回归全靠肉眼。分三步：
-   - codegen：生成 .scad 的 `yanzhu(...)` 调用数 = 实例数，D/H 数值、坐标替换正确
-   - compose：prims → SVG/PDF 含图框、标题栏字段（图名/图号/比例/日期/版本）、字体栈、轴线点画线 dash
-   - smoke 加数值断言：24 柱坐标集合、bbox、柱高；SVG 大小含字体子集特征
+1. **T1 · write_layout 硬编码 D_mm=300** ✅ 已修复：`write_layout(data, out_dir, D_mm=None)` 显式传参（缺省写 `null`），`resolve_data` 对「数据层与调用参数均无 D」抛明确 ValueError（原为 TypeError）；server 从请求 D 透传；新增 3 例 D 语义测试
+2. **T2 · 几何/图纸回归零覆盖** ✅ 已修复（da34e95，测试 26→52 例）：`tests/test_codegen.py`（构件/轴线逐实例生成、core/ 相对路径、入口与三视图文件集）+ `tests/test_sheet.py`（图框/图名/标题栏/线宽图元、SVG 合法 XML、PDF 文件头、解析 y 翻转）+ smoke 升级为格式与内容断言（STL solid、OBJ 顶点、图纸含视图名/图号、文件头）
 3. **T3 · Web UI innerHTML 注入面**（`app/static/index.html`，[P2] 随 G12 强制）：表格渲染全用 innerHTML 拼数据。当前数据源为本地生成 + 自有 API，无威胁模型；但 G12「在线编辑」落地即成 XSS 面。修法（G12 前置）：表格改 `textContent` / `createElement`，或统一 `esc()` 工具 + 插值点全替换。
 
 ## 版本策略

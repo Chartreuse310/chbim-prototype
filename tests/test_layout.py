@@ -7,7 +7,7 @@
 import unittest
 
 from bridge.layout import (bay_widths, column_offsets, generate_layout,
-                           _fmt_d)
+                           write_layout, _fmt_d)
 
 
 class TestBayWidths(unittest.TestCase):
@@ -105,3 +105,40 @@ class TestGenerateLayout(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestWriteLayout(unittest.TestCase):
+    """T1：write_layout 的 D_mm 语义——显式传入或 null（fail fast），不再暗含 300。"""
+
+    def setUp(self):
+        import tempfile
+        self._tmp = tempfile.TemporaryDirectory()
+        from pathlib import Path
+        self.out = Path(self._tmp.name) / "gen"
+        self.data = generate_layout(3, 3)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def test_d_mm_explicit(self):
+        import json
+        from bridge import resolver
+        write_layout(self.data, self.out, D_mm=250)
+        module = json.loads((self.out / "axes.json").read_text())["module"]
+        self.assertEqual(module["D_mm"], 250)
+        spec = resolver.resolve(self.out)          # 用数据层缺省 D
+        self.assertEqual(spec["D"], 250.0)
+
+    def test_d_mm_none_writes_null(self):
+        import json
+        write_layout(self.data, self.out)          # 未传 D_mm
+        module = json.loads((self.out / "axes.json").read_text())["module"]
+        self.assertIsNone(module["D_mm"])
+
+    def test_d_missing_everywhere_fails_fast(self):
+        from bridge import resolver
+        write_layout(self.data, self.out)          # null + 不给 D
+        with self.assertRaises(ValueError):
+            resolver.resolve(self.out)
+        spec = resolver.resolve(self.out, D=300)   # 显式给 D → 正常
+        self.assertEqual(spec["D"], 300.0)

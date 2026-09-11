@@ -105,7 +105,8 @@ class Handler(BaseHTTPRequestHandler):
                 ming_kuo_w=body.get("ming_kuo_w", layout.DEFAULT_MING_W),
                 ming_shen_w=body.get("ming_shen_w", layout.DEFAULT_MING_W))
             gen_dir = BUILD / "generated"
-            layout.write_layout(data, gen_dir)
+            layout.write_layout(data, gen_dir,
+                                D_mm=float(D) if D else None)
             D = body.get("D")
             result = pipeline.build(D=float(D) if D else None,
                                     data_dir=gen_dir)

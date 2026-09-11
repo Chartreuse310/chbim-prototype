@@ -8,6 +8,7 @@
 - 测试扩充 26 → 52 例：新增 `tests/test_codegen.py`（构件与轴线逐实例生成、`core/` 相对路径引用、入口与三视图文件集）与 `tests/test_sheet.py`（图框/图名/标题栏/线宽图元断言、SVG 为合法 XML 且 A4 横式、PDF 文件头、OpenSCAD SVG 解析含 y 翻转）；`tests/test_smoke.py` 由「产物存在即通过」升级为格式与内容断言（STL ASCII solid、OBJ 顶点行、图纸 SVG 含三视图名与图号、PDF/PNG 文件头），并改为单次构建共享
 
 ### Fixed
+- **`write_layout` 隐含 D_mm=300（T1）**：改为显式 `D_mm` 参数（缺省写 `null`，语义上 D 属于调用方输入）；`resolve_data` 对「调用参数与数据层均无 D」抛明确 ValueError（原为 `TypeError: float(None)`）；`/api/layout` 从请求 D 透传。新增 3 例 D 语义测试（52 → 55 例）
 - **`Makefile` 解释器路径硬编码**：`PY` 由写死的本机绝对路径改为默认 `python3`，本机自定义解释器/虚拟环境写入 `Makefile.local`（已 gitignore）。外部研究者 clone 后 `make build/serve/test` 开箱可用——原写法会让 README「快速开始」第一步直接失败
 - **`app/server.py` 启动横幅死代码**：删除 `if False` 恒假的 OpenSCAD 探测表达式，改为真实调用 `openscad.find_binary()`，缺失时打印警告（不必等到点「生成」才发现）
 - **CI 冒烟测试兼容旧版 OpenSCAD**（ubuntu-latest apt 版为 2021.01）：OBJ 导出失败时用 trimesh 从 STL 兜底转换（无 trimesh 则跳过并警告）；离屏 PNG 预览失败时警告并跳过（非关键产物）。CI workflow 补装 fontTools/trimesh，触发条件加 `tags: ['v*']`

@@ -128,13 +128,19 @@ def generate_layout(mian_kuo: int, jin_shen: int,
     }
 
 
-def write_layout(data: dict, out_dir) -> None:
-    """把生成数据写到目录（axes.json + members/yanzhu.json），供 resolver.load_data。"""
+def write_layout(data: dict, out_dir, D_mm: float | None = None) -> None:
+    """把生成数据写到目录（axes.json + members/yanzhu.json），供 resolver.load_data。
+
+    D_mm：整体模数（mm）。生成语义上 D 属于调用方（交互层/测试）的输入——
+    显式传入则写入数据层缺省值；缺省 None 时写 null，此时 resolve() 必须
+    显式给 D，否则 resolver 会以明确报错拒绝（fail fast，不再暗含 300）。
+    """
     import json
     from pathlib import Path
     out = Path(out_dir)
     (out / "members").mkdir(parents=True, exist_ok=True)
-    axes = {"module": {"D_mm": 300, "note": "生成布局；D 可由交互层覆盖"},
+    axes = {"module": {"D_mm": D_mm,
+                       "note": "生成布局；D 由调用方显式传入（null 时 resolve() 必须给 D）"},
             "axes": data["axes"]}
     (out / "axes.json").write_text(
         json.dumps(axes, ensure_ascii=False, indent=2), encoding="utf-8")
