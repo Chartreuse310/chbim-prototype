@@ -16,6 +16,9 @@ __pycache__/
 venv/
 .pytest_cache/
 
+# 本地 Makefile 覆盖（解释器绝对路径等，因人而异，不入库）
+Makefile.local
+
 # 跨平台系统文件
 Thumbs.db
 desktop.ini

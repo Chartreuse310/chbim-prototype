@@ -7,10 +7,14 @@
 #   make snapshot       将当前 build/ 示例产物快照到 docs/images/（README 展示用）
 #   make clean          清理 build/
 #
-# 依赖 reportlab（PDF 图纸）与 fontTools（SVG 字体子集嵌入）。默认 PY 指向
-# managed venv（含上述依赖），可 PY=/path/to/your/python 覆盖。
+# 依赖 reportlab（PDF 图纸）与 fontTools（SVG 字体子集嵌入）。
+# PY 默认使用 PATH 上的 python3（clone 后开箱可用）；本机自定义解释器或
+# 虚拟环境写入 Makefile.local（已 gitignore，不入库），例如：
+#     PY := /path/to/venv/bin/python3
 
-PY ?= /Users/z/.workbuddy/binaries/python/envs/default/bin/python3
+PY ?= python3
+-include Makefile.local
+
 D  ?= 300
 PORT ?= 8765
 

@@ -12,7 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
-from bridge import pipeline, resolver
+from bridge import openscad, pipeline, resolver
 
 ROOT = Path(__file__).resolve().parents[1]
 STATIC = ROOT / "app" / "static"
@@ -121,7 +121,10 @@ def main() -> None:
     port = int(os.environ.get("CHBIM_PORT", "8765"))
     addr = ("127.0.0.1", port)
     print(f"CHBIM Web 工作台：http://{addr[0]}:{addr[1]}/")
-    print(f"（OpenSCAD：{__import__('bridge').bridge.openscad.find_binary() if False else ''}）")
+    try:
+        print(f"OpenSCAD：{openscad.find_binary()}")
+    except FileNotFoundError as e:
+        print(f"[warn] {e}\n        「生成」将不可用；图纸与数据表不受影响。")
     ThreadingHTTPServer(addr, Handler).serve_forever()
 
 
